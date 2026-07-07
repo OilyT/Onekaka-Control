@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Onekaka Hydro Power Station</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Onekaka Hydro Power Station</h1>
+    <p>Golden Bay / Mohua, New Zealand</p>
+  </header>
+
+  <main>
+    <!-- Top Images with Station Info Overlays -->
+    <section class="top-images">
+      <div class="top-image-container">
+        <img src="{{ url_for('static', filename='Media/powerhouse_2.jpg') }}" alt="Main view of Onekaka Power Station Powerhouse">
+        <div id="station-output" class="station-info-item"></div>
+      </div>
+      <div class="top-image-container">
+        <img src="{{ url_for('static', filename='Media/dam.jpg') }}" alt="Dam view">
+        <div id="pond-level" class="station-info-item"></div>
+      </div>
+    </section>
+
+    <!-- Grid with paragraph and images -->
+    <section class="content-grid">
+      <!-- Left Images -->
+      <div class="left-images">
+        <img src="{{ url_for('static', filename='Media/onekaka_lawn.jpg') }}" alt="Lawn">
+        <img src="{{ url_for('static', filename='Media/map_2.jpg') }}" alt="Map">
+        <img src="{{ url_for('static', filename='Media/onekaka_map.jpg') }}" alt="Map2">
+        <img src="{{ url_for('static', filename='Media/duck.jpg') }}" alt="Duck">
+      </div>
+
+      <!-- Paragraph Text -->
+      <div class="description">
+        <p>
+          Onekaka Power Station is a small hydro-electric generating station on the Onekaka River, in Golden Bay / Mohua, New Zealand.
+          The first power station on the river was built in 1928–29 to provide power for the Onekaka Ironworks.
+          The original scheme included a concrete arch dam 10 m (33 ft) high, a penstock 1.25 km (0.78 mi) long,
+          and a powerhouse containing a Boving pelton wheel, rated at 250 kW.
+        </p>
+        <p>
+          After the Onekaka Ironworks closed, the power station remained in operation from 1937 to 1944, generating electricity for the Golden Bay area.
+          The scheme was abandoned in the 1950s. A group of local hydro enthusiasts began work on a rebuild in 1995,
+          and formed a company Onekaka Energy Ltd to manage the re-development and operation of the scheme.
+          Up to 500 litres (110 imp gal; 130 US gal) a second would be diverted from the Onekaka River,
+          and opponents expressed concerns that a reduction in minimum flows in the river would affect the native fish, the shortjaw kōkopu.
+        </p>
+        <p>
+          The new scheme uses the historic concrete arch dam, but a new penstock was built on the same alignment as the original.
+          The new penstock extends a further 180 m (200 yd), to a new powerhouse downstream from the original site.
+          New generating equipment for the scheme was obtained from salvage of two 500 kW auxiliary hydro-generator sets
+          that had originally been used at the Tuai Power Station, a 60 MW station built as part of the Lake Waikaremoana scheme in the 1920s.
+          The hydraulic head of the station is 200 m (660 ft) and the rated capacity of the new generating plant is 940 kW.
+          It was commissioned in November 2003, and produces 3.5 GWh annually.
+          The output is sold on the New Zealand electricity market.
+          The scheme produces 10 to 20 percent of the electricity used in Golden Bay.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Onekaka Energy Ltd</p>
+  </footer>
+
+  <!-- script to pull data from modbus client -->
+  <script>
+    function fetchStationInfo() {
+      fetch('/api/station-info')
+        .then(response => response.json())
+        .then(data => {
+          const entries = Object.entries(data);
+          if (entries.length >= 2) {
+            document.getElementById('station-output').textContent = `${entries[0][0]}: ${entries[0][1]}`;
+            document.getElementById('pond-level').textContent = `${entries[1][0]}: ${entries[1][1]}`;
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching station info:", error);
+        });
+    }
+
+    setInterval(fetchStationInfo, 5000);
+    fetchStationInfo()
+  </script>
+</body>
+</html>
