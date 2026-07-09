@@ -47,7 +47,7 @@ def _append_csv(row: dict):
 # ---------------------------------------------------------------------------
 # Modbus polling thread
 # ---------------------------------------------------------------------------
-def modbus_station_poller(host="10.1.1.192", port=20260, framer=FramerType.SOCKET):
+def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOCKET):
     global connection_status
 
     _init_csv()
@@ -67,7 +67,7 @@ def modbus_station_poller(host="10.1.1.192", port=20260, framer=FramerType.SOCKE
                 reg_type = info["type"]
                 try:
                     if reg_type == "register":
-                        rr = client.read_holding_registers(address, count=1, slave=1)
+                        rr = client.read_holding_registers(address, count=1, device_id=1)
                         if rr.isError():
                             station_info_data[name] = "Modbus Error"
                             snapshot[name] = ""
@@ -80,7 +80,7 @@ def modbus_station_poller(host="10.1.1.192", port=20260, framer=FramerType.SOCKE
                             station_info_data[name] = val
                             snapshot[name] = val
                     elif reg_type == "coil":
-                        rr = client.read_coils(address, count=1, slave=1)
+                        rr = client.read_coils(address, count=1, device_id=1)
                         if rr.isError():
                             station_info_data[name] = "Modbus Error"
                             snapshot[name] = ""
