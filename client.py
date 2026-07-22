@@ -13,6 +13,8 @@ from data_logging import (
     LOG_INTERVAL_SECONDS,
     LOG_TOTAL_SLOTS,
     TIMESTAMP_FORMAT,
+    TimeSeriesLogState,
+    build_time_series_log_state,
     update_time_series_log,
 )
 
@@ -22,8 +24,83 @@ HISTORY_LENGTH = LOG_TOTAL_SLOTS
 station_info_data: dict = {}
 connection_status: str = "Connecting..."
 history: deque = deque(maxlen=HISTORY_LENGTH)
+plot_timestamps: deque = deque(maxlen=HISTORY_LENGTH)
+plot_buffers: dict[str, deque] = {}
 monitored_registers: dict = {}
 register_lock = Lock()
+plot_buffer_lock = Lock()
+log_state: TimeSeriesLogState = TimeSeriesLogState()
+
+
+def _ensure_plot_field(name: str):
+    series = plot_buffers.get(name)
+    if series is None:
+        series = deque([0.0] * len(plot_timestamps), maxlen=HISTORY_LENGTH)
+        plot_buffers[name] = series
+    return series
+
+
+def initialize_plot_buffers(snapshots: list[dict], registers: dict):
+    now = datetime.now()
+    with plot_buffer_lock:
+        plot_timestamps.clear()
+        plot_buffers.clear()
+
+        for name in registers:
+            plot_buffers[name] = deque(maxlen=HISTORY_LENGTH)
+
+        for snapshot in snapshots:
+            ts = snapshot.get("timestamp")
+            if not isinstance(ts, str):
+                continue
+
+            try:
+                ts_dt = datetime.strptime(ts, TIMESTAMP_FORMAT)
+            except ValueError:
+                continue
+
+            if ts_dt > now:
+                continue
+
+            plot_timestamps.append(ts_dt)
+            for name in list(plot_buffers.keys()):
+                value = snapshot.get(name)
+                plot_buffers[name].append(float(value) if isinstance(value, (int, float)) else 0.0)
+
+
+def initialize_log_state(registers: dict, now: datetime | None = None):
+    global log_state
+    log_state = build_time_series_log_state(registers, csv_file=CSV_FILE, now=now)
+
+
+def append_plot_buffers(slot_ts: str, register_names: list[str], current_values: dict):
+    try:
+        ts_dt = datetime.strptime(slot_ts, TIMESTAMP_FORMAT)
+    except ValueError:
+        return
+
+    with plot_buffer_lock:
+        for name in register_names:
+            _ensure_plot_field(name)
+
+        # Replace values when writing the same logging slot to avoid duplicate points.
+        if plot_timestamps and plot_timestamps[-1] == ts_dt:
+            for name, series in plot_buffers.items():
+                if not series:
+                    continue
+                value = current_values.get(name)
+                if isinstance(value, (int, float)):
+                    series[-1] = float(value)
+        else:
+            plot_timestamps.append(ts_dt)
+            for name, series in plot_buffers.items():
+                value = current_values.get(name)
+                if isinstance(value, (int, float)):
+                    series.append(float(value))
+                elif series:
+                    series.append(series[-1])
+                else:
+                    series.append(0.0)
 
 
 # ---------------------------------------------------------------------------
@@ -92,13 +169,20 @@ def data_logger_worker():
             for name in register_copy
         }
 
-        update_time_series_log(register_copy, current_values, csv_file=CSV_FILE, now=now)
+        update_time_series_log(
+            register_copy,
+            current_values,
+            csv_file=CSV_FILE,
+            now=now,
+            state=log_state,
+        )
 
         snapshot = {"timestamp": slot_ts}
         for name in register_copy:
             value = current_values.get(name)
             snapshot[name] = value if isinstance(value, (int, float)) else 0
         history.append(snapshot)
+        append_plot_buffers(slot_ts, list(register_copy.keys()), current_values)
 
         sleep_for = LOG_INTERVAL_SECONDS - (time.time() % LOG_INTERVAL_SECONDS)
         if sleep_for <= 0:

@@ -1,5 +1,6 @@
 import csv
 import os
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
 CSV_FILE = "station_log.csv"
@@ -11,6 +12,12 @@ LOG_DAYS = 8
 SLOTS_PER_DAY = (24 * 60 * 60) // LOG_INTERVAL_SECONDS
 LOG_TOTAL_SLOTS = LOG_DAYS * SLOTS_PER_DAY
 LOG_METADATA_FIELDS = ["name", "address", "type", "min", "max"]
+
+
+@dataclass
+class TimeSeriesLogState:
+    fieldnames: list[str] = field(default_factory=list)
+    rows_by_name: dict[str, dict] = field(default_factory=dict)
 
 
 def _format_timestamp(dt: datetime) -> str:
@@ -36,6 +43,37 @@ def _slot_timestamp(now: datetime) -> str:
         microseconds=now.microsecond,
     )
     return _format_timestamp(rounded)
+
+
+def _read_log_state(csv_file: str) -> TimeSeriesLogState:
+    state = TimeSeriesLogState()
+    if not os.path.exists(csv_file):
+        return state
+
+    with open(csv_file, "r", newline="") as f:
+        reader = csv.DictReader(f)
+        state.fieldnames = list(reader.fieldnames or [])
+        for row in reader:
+            name = (row.get("name") or "").strip()
+            if name:
+                state.rows_by_name[name] = row
+
+    return state
+
+
+def build_time_series_log_state(
+    registers: dict,
+    csv_file: str = CSV_FILE,
+    now: datetime | None = None,
+) -> TimeSeriesLogState:
+    """Build an in-memory view of the matrix log used for fast incremental updates."""
+    init_csv(registers, csv_file=csv_file, now=now)
+    return _read_log_state(csv_file)
+
+
+def _copy_log_state(target: TimeSeriesLogState, source: TimeSeriesLogState):
+    target.fieldnames = list(source.fieldnames)
+    target.rows_by_name = dict(source.rows_by_name)
 
 
 def init_csv(registers: dict, csv_file: str = CSV_FILE, now: datetime | None = None):
@@ -86,30 +124,31 @@ def update_time_series_log(
     current_values: dict,
     csv_file: str = CSV_FILE,
     now: datetime | None = None,
+    state: TimeSeriesLogState | None = None,
 ):
     if not registers:
         return
 
     current_time = now or datetime.now()
-    init_csv(registers, csv_file=csv_file, now=current_time)
 
-    with open(csv_file, "r", newline="") as f:
-        reader = csv.DictReader(f)
-        fieldnames = reader.fieldnames or []
-        rows = list(reader)
+    if state is None:
+        init_csv(registers, csv_file=csv_file, now=current_time)
+        active_state = _read_log_state(csv_file)
+    else:
+        active_state = state
+        if not active_state.fieldnames:
+            init_csv(registers, csv_file=csv_file, now=current_time)
+            _copy_log_state(active_state, _read_log_state(csv_file))
 
     slot = _slot_timestamp(current_time)
-    if slot not in fieldnames:
+    if slot not in active_state.fieldnames:
         init_csv(registers, csv_file=csv_file, now=current_time)
-        with open(csv_file, "r", newline="") as f:
-            reader = csv.DictReader(f)
-            fieldnames = reader.fieldnames or []
-            rows = list(reader)
+        _copy_log_state(active_state, _read_log_state(csv_file))
 
-    by_name = {(row.get("name") or "").strip(): row for row in rows}
+    fieldnames = active_state.fieldnames
     updated_rows = []
     for name, info in registers.items():
-        row = by_name.get(name, {field: "0" for field in fieldnames})
+        row = dict(active_state.rows_by_name.get(name, {field: "0" for field in fieldnames}))
         row["name"] = name
         row["address"] = info["address"]
         row["type"] = info.get("type", "register")
@@ -118,6 +157,7 @@ def update_time_series_log(
 
         value = current_values.get(name)
         row[slot] = value if isinstance(value, (int, float)) else 0
+        active_state.rows_by_name[name] = row
         updated_rows.append(row)
 
     with open(csv_file, "w", newline="") as f:

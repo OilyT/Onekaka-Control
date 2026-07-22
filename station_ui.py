@@ -14,6 +14,7 @@ class StationMonitor(tk.Tk):
     _SEP = "#45475a"
     _PLOT_BG = "#181825"
     _PLOT_HEIGHT_PER_AXIS = 30.0
+    _PLOT_LOOKBACK_DAYS = 7
 
     def __init__(
         self,
@@ -21,6 +22,9 @@ class StationMonitor(tk.Tk):
         monitored_registers,
         register_lock,
         history,
+        plot_timestamps,
+        plot_buffers,
+        plot_buffer_lock,
         poll_interval,
         csv_file,
         get_connection_status,
@@ -31,6 +35,9 @@ class StationMonitor(tk.Tk):
         self._monitored_registers = monitored_registers
         self._register_lock = register_lock
         self._history = history
+        self._plot_timestamps = plot_timestamps
+        self._plot_buffers = plot_buffers
+        self._plot_buffer_lock = plot_buffer_lock
         self._poll_interval = poll_interval
         self._csv_file = csv_file
         self._get_connection_status = get_connection_status
@@ -69,9 +76,14 @@ class StationMonitor(tk.Tk):
         self.address_var = tk.StringVar()
         self.min_var = tk.StringVar()
         self.max_var = tk.StringVar()
-        self.display_minutes_var = tk.StringVar(value="240")
+        self.end_time_var = tk.StringVar(value=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        self.window_hours_var = tk.StringVar(value="4")
+        self.use_now_var = tk.BooleanVar(value=True)
         self.form_status_var = tk.StringVar(value="")
         self.range_status_var = tk.StringVar(value="")
+        self._active_use_now = True
+        self._active_end_time: datetime | None = None
+        self._active_window_hours = 4.0
 
         tk.Label(
             left,
@@ -125,8 +137,36 @@ class StationMonitor(tk.Tk):
             fg=self._FG,
         ).grid(row=11, column=0, columnspan=2, sticky="w", pady=(0, 6))
 
-        tk.Label(left, text="Display Minutes (all)", bg=self._BG, fg=self._FG).grid(row=12, column=0, sticky="w")
-        tk.Entry(left, textvariable=self.display_minutes_var, width=18).grid(row=12, column=1, sticky="e")
+        tk.Label(left, text="End Time (YYYY-MM-DD HH:MM:SS)", bg=self._BG, fg=self._FG).grid(row=12, column=0, sticky="w")
+        self.end_time_entry = tk.Entry(left, textvariable=self.end_time_var, width=18)
+        self.end_time_entry.grid(row=12, column=1, sticky="e")
+
+        tk.Label(left, text="Window Hours", bg=self._BG, fg=self._FG).grid(row=13, column=0, sticky="w")
+        tk.Entry(left, textvariable=self.window_hours_var, width=18).grid(row=13, column=1, sticky="e")
+
+        tk.Checkbutton(
+            left,
+            text="Most Recent",
+            variable=self.use_now_var,
+            command=self._on_toggle_use_now,
+            bg=self._BG,
+            fg=self._FG,
+            selectcolor=self._PLOT_BG,
+            activebackground=self._BG,
+            activeforeground=self._FG,
+        ).grid(row=14, column=0, columnspan=2, sticky="w", pady=(4, 0))
+
+        tk.Button(
+            left,
+            text="Apply Window",
+            command=self._apply_window_settings,
+            bg=self._ACCENT,
+            fg="#11111b",
+            activebackground="#74c7ec",
+            relief="flat",
+            padx=8,
+            pady=4,
+        ).grid(row=15, column=0, columnspan=2, sticky="ew", pady=(6, 4))
 
         tk.Label(
             left,
@@ -134,10 +174,10 @@ class StationMonitor(tk.Tk):
             font=("Helvetica", 8),
             bg=self._BG,
             fg="#f9e2af",
-        ).grid(row=13, column=0, columnspan=2, sticky="w", pady=(0, 8))
+        ).grid(row=16, column=0, columnspan=2, sticky="w", pady=(0, 8))
 
         tk.Frame(left, bg=self._SEP, height=1).grid(
-            row=14, column=0, columnspan=2, sticky="ew", pady=(0, 8)
+            row=17, column=0, columnspan=2, sticky="ew", pady=(0, 8)
         )
 
         tk.Label(
@@ -146,10 +186,10 @@ class StationMonitor(tk.Tk):
             font=("Helvetica", 11, "bold"),
             bg=self._BG,
             fg=self._FG,
-        ).grid(row=15, column=0, columnspan=2, sticky="w", pady=(0, 6))
+        ).grid(row=18, column=0, columnspan=2, sticky="w", pady=(0, 6))
 
         self.values_frame = tk.Frame(left, bg=self._BG)
-        self.values_frame.grid(row=16, column=0, columnspan=2, sticky="ew")
+        self.values_frame.grid(row=19, column=0, columnspan=2, sticky="ew")
         self.value_vars = {}
 
         self.updated_var = tk.StringVar(value="")
@@ -159,7 +199,7 @@ class StationMonitor(tk.Tk):
             font=("Helvetica", 8),
             bg=self._BG,
             fg=self._DIM,
-        ).grid(row=17, column=0, columnspan=2, pady=(14, 2))
+        ).grid(row=20, column=0, columnspan=2, pady=(14, 2))
 
         tk.Label(
             left,
@@ -167,7 +207,7 @@ class StationMonitor(tk.Tk):
             font=("Helvetica", 8),
             bg=self._BG,
             fg=self._DIM,
-        ).grid(row=18, column=0, columnspan=2)
+        ).grid(row=21, column=0, columnspan=2)
 
         # ---- Right panel: scrollable plots ---------------------------------
         right = tk.Frame(self, bg=self._BG, padx=10, pady=20)
@@ -217,9 +257,18 @@ class StationMonitor(tk.Tk):
         self._hover_annotation = None
 
         self._plot_tick = 0
+        self._on_toggle_use_now()
+        self._apply_window_settings()
         self._rebuild_value_rows()
         self._rebuild_plot_axes()
         self._refresh()
+
+    def _on_toggle_use_now(self):
+        if self.use_now_var.get():
+            self.end_time_var.set(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.end_time_entry.configure(state="disabled")
+        else:
+            self.end_time_entry.configure(state="normal")
 
     def _on_plot_inner_configure(self, _event):
         self._plot_scroll_canvas.configure(scrollregion=self._plot_scroll_canvas.bbox("all"))
@@ -334,62 +383,91 @@ class StationMonitor(tk.Tk):
         self._rebuild_value_rows()
         self._rebuild_plot_axes()
 
-    def _parse_display_minutes(self):
-        text = self.display_minutes_var.get().strip()
+    def _parse_window_hours(self):
+        text = self.window_hours_var.get().strip()
         try:
-            minutes = float(text)
-            if minutes <= 0:
+            hours = float(text)
+            if hours <= 0:
+                raise ValueError
+            if hours > self._PLOT_LOOKBACK_DAYS * 24:
                 raise ValueError
             self.range_status_var.set("")
-            return minutes
+            return hours
         except ValueError:
-            self.range_status_var.set("Display minutes must be a positive number")
+            self.range_status_var.set(
+                f"Window hours must be > 0 and <= {self._PLOT_LOOKBACK_DAYS * 24}"
+            )
             return None
 
-    def _get_window_points(self):
-        snaps = list(self._history)
-        minutes = self._parse_display_minutes()
-        if minutes is None:
-            return []
+    def _parse_end_time(self):
+        if self.use_now_var.get():
+            return datetime.now()
 
-        latest_log_dt = None
-        for snap in reversed(snaps):
-            ts = snap.get("timestamp")
-            if not isinstance(ts, str):
-                continue
-            try:
-                latest_log_dt = datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
-                break
-            except ValueError:
-                continue
+        text = self.end_time_var.get().strip()
+        try:
+            dt = datetime.strptime(text, "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            self.range_status_var.set("End time must match YYYY-MM-DD HH:MM:SS")
+            return None
 
-        if latest_log_dt is None:
-            latest_log_dt = datetime.now()
+        now = datetime.now()
+        earliest = now - timedelta(days=self._PLOT_LOOKBACK_DAYS)
+        if dt > now:
+            self.range_status_var.set("End time cannot be in the future")
+            return None
+        if dt < earliest:
+            self.range_status_var.set(
+                f"End time must be within the last {self._PLOT_LOOKBACK_DAYS} days"
+            )
+            return None
 
-        cutoff = latest_log_dt - timedelta(minutes=minutes)
-        points = []
-        for snap in snaps:
-            ts = snap.get("timestamp")
-            if not isinstance(ts, str):
-                continue
-            try:
-                dt = datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
-            except ValueError:
-                continue
-            if cutoff <= dt <= latest_log_dt:
-                points.append((dt, snap))
+        return dt
 
-        if not points:
-            # Keep axis meaningful when no data exists in the selected range.
-            return [(cutoff, None), (latest_log_dt, None)]
+    def _apply_window_settings(self):
+        hours = self._parse_window_hours()
+        if hours is None:
+            return
 
-        # Always pin visible domain to [latest_log - minutes, latest_log].
-        if points[0][0] > cutoff:
-            points.insert(0, (cutoff, None))
-        if points[-1][0] < latest_log_dt:
-            points.append((latest_log_dt, None))
+        end_time = self._parse_end_time()
+        if end_time is None:
+            return
 
-        return points
+        self._active_window_hours = hours
+        self._active_use_now = self.use_now_var.get()
+        self._active_end_time = None if self._active_use_now else end_time
+        self.range_status_var.set("Window settings applied")
+
+    def _get_window_data(self):
+        hours = self._active_window_hours
+        end_time = datetime.now() if self._active_use_now else self._active_end_time
+        if end_time is None:
+            return None
+
+        with self._plot_buffer_lock:
+            timestamps = list(self._plot_timestamps)
+            series_by_name = {
+                name: list(values)
+                for name, values in self._plot_buffers.items()
+            }
+
+        latest_log_dt = end_time
+        cutoff = latest_log_dt - timedelta(hours=hours)
+
+        now = datetime.now()
+        earliest_allowed = now - timedelta(days=self._PLOT_LOOKBACK_DAYS)
+        if cutoff < earliest_allowed:
+            cutoff = earliest_allowed
+            self.range_status_var.set(
+                f"Window start capped to {self._PLOT_LOOKBACK_DAYS}-day history limit"
+            )
+        else:
+            self.range_status_var.set("")
+
+        first_idx = 0
+        while first_idx < len(timestamps) and timestamps[first_idx] < cutoff:
+            first_idx += 1
+
+        return cutoff, latest_log_dt, timestamps, series_by_name, first_idx
 
     def _on_plot_leave(self, _event):
         if self._hover_annotation is not None:
@@ -439,6 +517,8 @@ class StationMonitor(tk.Tk):
     def _refresh(self):
         # Update live value labels
         self.status_var.set(self._get_connection_status())
+        if self.use_now_var.get():
+            self.end_time_var.set(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         for name, var in self.value_vars.items():
             var.set(str(self._station_info_data.get(name, "---")))
         self.updated_var.set(f"Last updated: {time.strftime('%H:%M:%S')}")
@@ -452,7 +532,11 @@ class StationMonitor(tk.Tk):
         self.after(1000, self._refresh)
 
     def _update_plot(self):
-        window_points = self._get_window_points()
+        window_data = self._get_window_data()
+        if window_data is None:
+            return
+
+        cutoff, latest_log_dt, timestamps, series_by_name, first_idx = window_data
         self._series_cache = {}
         self._hover_annotation = None
 
@@ -485,18 +569,37 @@ class StationMonitor(tk.Tk):
             vx = []
             vy = []
 
-            for dt, snap in window_points:
-                vx.append(mdates.date2num(dt))
-                value = 0.0
-                if snap is not None:
-                    raw_value = snap.get(name)
-                    if isinstance(raw_value, (int, float)):
-                        value = float(raw_value)
-                vy.append(value)
+            values = series_by_name.get(name, [])
+            if timestamps and first_idx < len(timestamps):
+                for idx in range(first_idx, len(timestamps)):
+                    if idx >= len(values):
+                        continue
+                    vx.append(mdates.date2num(timestamps[idx]))
+                    vy.append(float(values[idx]))
+
+                if vx and timestamps[first_idx] > cutoff:
+                    vx.insert(0, mdates.date2num(cutoff))
+                    vy.insert(0, vy[0])
+
+                if vx and timestamps[-1] < latest_log_dt:
+                    vx.append(mdates.date2num(latest_log_dt))
+                    vy.append(vy[-1])
 
             if vx:
                 ax.plot(vx, vy, color=self._ACCENT, linewidth=1.5)
-                ax.fill_between(vx, vy, alpha=0.15, color=self._ACCENT)
+            else:
+                ax.text(
+                    0.5,
+                    0.5,
+                    "No data in selected range",
+                    color=self._DIM,
+                    fontsize=10,
+                    ha="center",
+                    va="center",
+                    transform=ax.transAxes,
+                )
+
+            ax.set_xlim(mdates.date2num(cutoff), mdates.date2num(latest_log_dt))
 
             self._series_cache[ax] = {"name": name, "xs": vx, "ys": vy}
 
@@ -508,14 +611,13 @@ class StationMonitor(tk.Tk):
 
             ax.set_title(name, color=self._FG, fontsize=14, pad=6, loc="left")
             ax.set_facecolor(self._PLOT_BG)
-            ax.tick_params(colors=self._DIM, labelsize=11)
+            ax.tick_params(axis="y", colors=self._DIM, labelsize=11)
+            ax.tick_params(axis="x", colors=self._DIM, labelsize=11, labelbottom=True, rotation=20)
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
             for spine in ax.spines.values():
                 spine.set_color(self._SEP)
 
             ax.set_xlabel("Time", color=self._DIM, fontsize=10)
-
-        self._fig.autofmt_xdate(rotation=20)
 
         self._canvas.draw()
