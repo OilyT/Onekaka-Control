@@ -4,6 +4,7 @@ from client import (
     CSV_FILE,
     POLL_INTERVAL,
     HISTORY_LENGTH,
+    data_logger_worker,
     get_connection_status,
     history,
     modbus_station_poller,
@@ -13,6 +14,7 @@ from client import (
 )
 from data_logging import (
     REGISTERS_FILE,
+    init_csv,
     init_registers_csv,
     load_history_from_csv,
     load_station_registers,
@@ -24,12 +26,16 @@ from station_ui import StationMonitor
 if __name__ == "__main__":
     init_registers_csv(REGISTERS_FILE)
     load_station_registers(monitored_registers, REGISTERS_FILE)
+    init_csv(monitored_registers, CSV_FILE)
 
     for snapshot in load_history_from_csv(CSV_FILE, max_points=HISTORY_LENGTH):
         history.append(snapshot)
 
     poll_thread = Thread(target=modbus_station_poller, daemon=True)
     poll_thread.start()
+
+    log_thread = Thread(target=data_logger_worker, daemon=True)
+    log_thread.start()
 
     app = StationMonitor(
         station_info_data=station_info_data,

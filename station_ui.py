@@ -352,8 +352,21 @@ class StationMonitor(tk.Tk):
         if minutes is None:
             return []
 
-        now_dt = datetime.now()
-        cutoff = datetime.now() - timedelta(minutes=minutes)
+        latest_log_dt = None
+        for snap in reversed(snaps):
+            ts = snap.get("timestamp")
+            if not isinstance(ts, str):
+                continue
+            try:
+                latest_log_dt = datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+                break
+            except ValueError:
+                continue
+
+        if latest_log_dt is None:
+            latest_log_dt = datetime.now()
+
+        cutoff = latest_log_dt - timedelta(minutes=minutes)
         points = []
         for snap in snaps:
             ts = snap.get("timestamp")
@@ -363,12 +376,18 @@ class StationMonitor(tk.Tk):
                 dt = datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
             except ValueError:
                 continue
-            if dt >= cutoff:
+            if cutoff <= dt <= latest_log_dt:
                 points.append((dt, snap))
 
         if not points:
             # Keep axis meaningful when no data exists in the selected range.
-            return [(cutoff, None), (now_dt, None)]
+            return [(cutoff, None), (latest_log_dt, None)]
+
+        # Always pin visible domain to [latest_log - minutes, latest_log].
+        if points[0][0] > cutoff:
+            points.insert(0, (cutoff, None))
+        if points[-1][0] < latest_log_dt:
+            points.append((latest_log_dt, None))
 
         return points
 

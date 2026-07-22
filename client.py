@@ -8,10 +8,16 @@ from threading import Lock
 
 import pymodbus.client as ModbusClient
 from pymodbus import FramerType, ModbusException
-from data_logging import CSV_FILE, append_csv, init_csv
+from data_logging import (
+    CSV_FILE,
+    LOG_INTERVAL_SECONDS,
+    LOG_TOTAL_SLOTS,
+    TIMESTAMP_FORMAT,
+    update_time_series_log,
+)
 
 POLL_INTERVAL = 5        # seconds between Modbus polls
-HISTORY_LENGTH = 120     # readings to keep for plot (120 × 5 s ≈ 10 min)
+HISTORY_LENGTH = LOG_TOTAL_SLOTS
 
 station_info_data: dict = {}
 connection_status: str = "Connecting..."
@@ -26,7 +32,6 @@ register_lock = Lock()
 def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOCKET):
     global connection_status
 
-    init_csv(CSV_FILE)
     client = ModbusClient.ModbusTcpClient(host, port=port, framer=framer)
 
     if not client.connect():
@@ -36,10 +41,6 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
 
     try:
         while True:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            snapshot = {"timestamp": timestamp}
-            csv_rows = []
-
             with register_lock:
                 register_items = list(monitored_registers.items())
 
@@ -51,7 +52,6 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                         rr = client.read_holding_registers(address, count=1, device_id=1)
                         if rr.isError():
                             station_info_data[name] = "Modbus Error"
-                            snapshot[name] = None
                         else:
                             val = (
                                 rr.registers[0] - 0x10000
@@ -59,27 +59,11 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                                 else rr.registers[0]
                             )
                             station_info_data[name] = val
-                            snapshot[name] = val
                     else:
                         station_info_data[name] = "Unsupported type"
-                        snapshot[name] = None
                 except ModbusException as exc:
                     station_info_data[name] = f"Exception: {exc}"
-                    snapshot[name] = None
 
-                csv_rows.append(
-                    {
-                        "timestamp": timestamp,
-                        "name": name,
-                        "address": address,
-                        "value": "" if snapshot[name] is None else snapshot[name],
-                        "min": info["min"],
-                        "max": info["max"],
-                    }
-                )
-
-            history.append(snapshot)
-            append_csv(csv_rows, CSV_FILE)
             time.sleep(POLL_INTERVAL)
     except Exception as e:
         connection_status = f"Disconnected: {e}"
@@ -88,4 +72,36 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
 
 def get_connection_status():
     return connection_status
+
+
+def data_logger_worker():
+    """Log current in-memory values every 30 seconds, independent of poll cadence."""
+    while True:
+        now = datetime.now()
+        slot_dt = now.replace(
+            second=(now.second // LOG_INTERVAL_SECONDS) * LOG_INTERVAL_SECONDS,
+            microsecond=0,
+        )
+        slot_ts = slot_dt.strftime(TIMESTAMP_FORMAT)
+
+        with register_lock:
+            register_copy = {name: dict(info) for name, info in monitored_registers.items()}
+
+        current_values = {
+            name: station_info_data.get(name)
+            for name in register_copy
+        }
+
+        update_time_series_log(register_copy, current_values, csv_file=CSV_FILE, now=now)
+
+        snapshot = {"timestamp": slot_ts}
+        for name in register_copy:
+            value = current_values.get(name)
+            snapshot[name] = value if isinstance(value, (int, float)) else 0
+        history.append(snapshot)
+
+        sleep_for = LOG_INTERVAL_SECONDS - (time.time() % LOG_INTERVAL_SECONDS)
+        if sleep_for <= 0:
+            sleep_for = LOG_INTERVAL_SECONDS
+        time.sleep(sleep_for)
 
