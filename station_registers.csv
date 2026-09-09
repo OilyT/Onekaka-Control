@@ -1,8 +1,10 @@
 name,address,type,min,max
 Pond Level (mm),50,register,0,2500
 Current Output (kW),33,register,0,1050
-Station Setpoint (kW),60,register,0,1050
+Station Setpoint (kW),60,register,0.0,1100.0
 Water Level Setpoint (mm),340,register,0.0,2500.0
 WL Integral,345,register,0.0,1050.0
 WL proportional,342,register,0.0,1050.0
 WL PID Out,350,register,0.0,1100.0
+Intake Batt Voltage,49,register,0.0,300.0
+Intake Differential Pressure,304,register,0.0,800.0

@@ -60,7 +60,6 @@ def set_plot_enabled(name: str, enabled: bool):
             _ensure_plot_field(name)
         else:
             plotted_fields.discard(name)
-            plot_buffers.pop(name, None)
 
 
 def initialize_plot_buffers(snapshots: list[dict], registers: dict):
@@ -69,9 +68,9 @@ def initialize_plot_buffers(snapshots: list[dict], registers: dict):
         plot_timestamps.clear()
         plot_buffers.clear()
 
-        for name in plotted_fields:
-            if name in registers:
-                plot_buffers[name] = deque(maxlen=HISTORY_LENGTH)
+        # Keep buffers for all configured registers; plotted_fields only controls visibility.
+        for name in registers.keys():
+            plot_buffers[name] = deque(maxlen=HISTORY_LENGTH)
 
         for snapshot in snapshots:
             ts = snapshot.get("timestamp")
@@ -104,13 +103,13 @@ def append_plot_buffers(slot_ts: str, register_names: list[str], current_values:
         return
 
     with plot_buffer_lock:
-        active_names = [name for name in register_names if name in plotted_fields]
-        for name in active_names:
+        # Always keep series updated for every configured register.
+        for name in register_names:
             _ensure_plot_field(name)
 
         # Replace values when writing the same logging slot to avoid duplicate points.
         if plot_timestamps and plot_timestamps[-1] == ts_dt:
-            for name in active_names:
+            for name in register_names:
                 series = plot_buffers.get(name)
                 if not series:
                     continue
@@ -119,7 +118,7 @@ def append_plot_buffers(slot_ts: str, register_names: list[str], current_values:
                     series[-1] = float(value)
         else:
             plot_timestamps.append(ts_dt)
-            for name in active_names:
+            for name in register_names:
                 series = plot_buffers.get(name)
                 if series is None:
                     continue
