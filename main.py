@@ -7,14 +7,17 @@ from client import (
     data_logger_worker,
     get_connection_status,
     history,
+    initialize_plotted_fields,
     initialize_log_state,
     initialize_plot_buffers,
+    is_plot_enabled,
     modbus_station_poller,
     monitored_registers,
     plot_buffer_lock,
     plot_buffers,
     plot_timestamps,
     register_lock,
+    set_plot_enabled,
     station_info_data,
 )
 from data_logging import (
@@ -34,6 +37,7 @@ if __name__ == "__main__":
     for snapshot in snapshots:
         history.append(snapshot)
 
+    initialize_plotted_fields(monitored_registers)
     initialize_log_state(monitored_registers)
     initialize_plot_buffers(snapshots, monitored_registers)
 
@@ -54,6 +58,8 @@ if __name__ == "__main__":
         poll_interval=POLL_INTERVAL,
         csv_file=CSV_FILE,
         get_connection_status=get_connection_status,
+        is_plot_enabled=is_plot_enabled,
+        set_plot_enabled=set_plot_enabled,
         persist_register=lambda name, info: upsert_station_register(
             name=name,
             address=info["address"],

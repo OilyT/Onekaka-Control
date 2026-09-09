@@ -13,8 +13,9 @@ class StationMonitor(tk.Tk):
     _DIM = "#6c7086"
     _SEP = "#45475a"
     _PLOT_BG = "#181825"
-    _PLOT_HEIGHT_PER_AXIS = 30.0
+    _PLOT_HEIGHT_PER_AXIS = 4.2
     _PLOT_LOOKBACK_DAYS = 7
+    _PLOT_WIDTH_INCHES = 8.0
 
     def __init__(
         self,
@@ -28,6 +29,8 @@ class StationMonitor(tk.Tk):
         poll_interval,
         csv_file,
         get_connection_status,
+        is_plot_enabled=None,
+        set_plot_enabled=None,
         persist_register=None,
     ):
         super().__init__()
@@ -41,6 +44,8 @@ class StationMonitor(tk.Tk):
         self._poll_interval = poll_interval
         self._csv_file = csv_file
         self._get_connection_status = get_connection_status
+        self._is_plot_enabled = is_plot_enabled
+        self._set_plot_enabled = set_plot_enabled
         self._persist_register = persist_register
 
         self.title("Onekaka Station Monitor")
@@ -191,6 +196,7 @@ class StationMonitor(tk.Tk):
         self.values_frame = tk.Frame(left, bg=self._BG)
         self.values_frame.grid(row=19, column=0, columnspan=2, sticky="ew")
         self.value_vars = {}
+        self.plot_vars = {}
 
         self.updated_var = tk.StringVar(value="")
         tk.Label(
@@ -244,12 +250,13 @@ class StationMonitor(tk.Tk):
         self._plot_scroll_canvas.bind("<Configure>", self._on_plot_canvas_configure)
 
         self._numeric_fields = []
-        self._fig = Figure(figsize=(8, self._PLOT_HEIGHT_PER_AXIS), facecolor=self._BG)
+        self._fig = Figure(figsize=(self._PLOT_WIDTH_INCHES, self._PLOT_HEIGHT_PER_AXIS), facecolor=self._BG)
         self._axes = []
-        self._fig.subplots_adjust(hspace=0.65, left=0.13, right=0.97, top=0.95, bottom=0.07)
+        self._fig.subplots_adjust(hspace=1.0, left=0.13, right=0.97, top=0.95, bottom=0.07)
 
         self._canvas = FigureCanvasTkAgg(self._fig, master=self._plot_inner)
-        self._canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        self._canvas_widget = self._canvas.get_tk_widget()
+        self._canvas_widget.pack(fill=tk.X, expand=False)
         self._canvas.mpl_connect("motion_notify_event", self._on_plot_hover)
         self._canvas.mpl_connect("figure_leave_event", self._on_plot_leave)
 
@@ -275,6 +282,23 @@ class StationMonitor(tk.Tk):
 
     def _on_plot_canvas_configure(self, event):
         self._plot_scroll_canvas.itemconfigure(self._plot_inner_window, width=event.width)
+        if not hasattr(self, "_canvas_widget"):
+            return
+        self._resize_plot_canvas(width_px=event.width)
+
+    def _resize_plot_canvas(self, width_px: int | None = None):
+        n = max(len(self._numeric_fields), 1)
+        dpi = self._fig.get_dpi()
+
+        if width_px is None or width_px <= 1:
+            width_px = int(self._PLOT_WIDTH_INCHES * dpi)
+
+        width_in = max(width_px / dpi, 1.0)
+        height_in = max(n * self._PLOT_HEIGHT_PER_AXIS, self._PLOT_HEIGHT_PER_AXIS)
+        self._fig.set_size_inches(width_in, height_in, forward=True)
+
+        height_px = int(height_in * dpi)
+        self._canvas_widget.configure(width=width_px, height=height_px)
 
     def _rebuild_value_rows(self):
         for widget in self.values_frame.winfo_children():
@@ -284,6 +308,7 @@ class StationMonitor(tk.Tk):
             names = list(self._monitored_registers.keys())
 
         self.value_vars = {}
+        self.plot_vars = {}
         if not names:
             tk.Label(
                 self.values_frame,
@@ -315,21 +340,59 @@ class StationMonitor(tk.Tk):
                 bg=self._BG,
                 fg=self._ACCENT,
                 anchor="e",
-                width=14,
-            ).grid(row=i, column=1, sticky="e", pady=3)
+                width=10,
+            ).grid(row=i, column=1, sticky="e", pady=3, padx=(0, 6))
+
+            is_enabled = True
+            if self._is_plot_enabled is not None:
+                is_enabled = self._is_plot_enabled(name)
+            plot_var = tk.BooleanVar(value=is_enabled)
+            self.plot_vars[name] = plot_var
+            tk.Checkbutton(
+                self.values_frame,
+                text="Plot",
+                variable=plot_var,
+                command=lambda field=name: self._toggle_plot_field(field),
+                bg=self._BG,
+                fg=self._FG,
+                selectcolor=self._PLOT_BG,
+                activebackground=self._BG,
+                activeforeground=self._FG,
+            ).grid(row=i, column=2, sticky="e", pady=3)
+
+    def _toggle_plot_field(self, name: str):
+        var = self.plot_vars.get(name)
+        if var is None:
+            return
+
+        enabled = bool(var.get())
+        if self._set_plot_enabled is not None:
+            self._set_plot_enabled(name, enabled)
+        self._rebuild_plot_axes()
+        self._update_plot()
+        self._canvas.draw_idle()
+
+    def _field_is_plotted(self, name: str) -> bool:
+        var = self.plot_vars.get(name)
+        if var is not None:
+            return bool(var.get())
+        if self._is_plot_enabled is not None:
+            return self._is_plot_enabled(name)
+        return True
 
     def _rebuild_plot_axes(self):
         with self._register_lock:
             self._numeric_fields = [
                 name
                 for name, info in self._monitored_registers.items()
-                if info["type"] == "register"
+                if info["type"] == "register" and self._field_is_plotted(name)
             ]
 
         self._fig.clear()
         n = max(len(self._numeric_fields), 1)
-        self._fig.set_size_inches(8, n * self._PLOT_HEIGHT_PER_AXIS, forward=True)
+        self._fig.set_size_inches(self._PLOT_WIDTH_INCHES, max(n * self._PLOT_HEIGHT_PER_AXIS, self._PLOT_HEIGHT_PER_AXIS), forward=True)
         self._axes = [self._fig.add_subplot(n, 1, i + 1) for i in range(n)]
+        self._resize_plot_canvas(width_px=self._plot_scroll_canvas.winfo_width())
         self._canvas.draw()
 
     def _add_or_update_register(self):
@@ -379,6 +442,8 @@ class StationMonitor(tk.Tk):
             )
 
         self._station_info_data[name] = "---"
+        if self._set_plot_enabled is not None:
+            self._set_plot_enabled(name, True)
         self.form_status_var.set(f"Saved register '{name}'")
         self._rebuild_value_rows()
         self._rebuild_plot_axes()
@@ -612,12 +677,12 @@ class StationMonitor(tk.Tk):
             ax.set_title(name, color=self._FG, fontsize=14, pad=6, loc="left")
             ax.set_facecolor(self._PLOT_BG)
             ax.tick_params(axis="y", colors=self._DIM, labelsize=11)
-            ax.tick_params(axis="x", colors=self._DIM, labelsize=11, labelbottom=True, rotation=20)
+            ax.tick_params(axis="x", colors=self._DIM, labelsize=11, labelbottom=True, rotation=20, pad=2)
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
             for spine in ax.spines.values():
                 spine.set_color(self._SEP)
 
-            ax.set_xlabel("Time", color=self._DIM, fontsize=10)
+            ax.set_xlabel("Time", color=self._DIM, fontsize=10, labelpad=2)
 
         self._canvas.draw()
