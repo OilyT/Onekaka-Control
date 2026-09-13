@@ -20,6 +20,8 @@ from data_logging import (
 
 POLL_INTERVAL = 5        # seconds between Modbus polls
 RECONNECT_INTERVAL = 30  # seconds between reconnect attempts
+MODBUS_TIMEOUT_SECONDS = 10
+MODBUS_RETRIES = 0
 HISTORY_LENGTH = LOG_TOTAL_SLOTS
 
 station_info_data: dict = {}
@@ -138,7 +140,13 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
     global connection_status
 
     while True:
-        client = ModbusClient.ModbusTcpClient(host, port=port, framer=framer)
+        client = ModbusClient.ModbusTcpClient(
+            host,
+            port=port,
+            framer=framer,
+            timeout=MODBUS_TIMEOUT_SECONDS,
+            retries=MODBUS_RETRIES,
+        )
 
         try:
             connection_status = "Connecting..."
