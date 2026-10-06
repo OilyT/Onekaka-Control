@@ -9,3 +9,4 @@ WL PID Out,350,register,0.0,1100.0
 Intake Batt (Volts x10),49,register,100.0,300.0
 Intake Differential Pressure (mm),304,register,0.0,400.0
 WL ROC (mm/hour),368,register,0.0,1000.0
+Penstock Pressure (cm),31,register,10000.0,25000.0
