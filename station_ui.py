@@ -32,6 +32,8 @@ class StationMonitor(tk.Tk):
         is_plot_enabled=None,
         set_plot_enabled=None,
         persist_register=None,
+        set_offline_mode=None,
+        is_offline_mode=None,
     ):
         super().__init__()
         self._station_info_data = station_info_data
@@ -47,6 +49,7 @@ class StationMonitor(tk.Tk):
         self._is_plot_enabled = is_plot_enabled
         self._set_plot_enabled = set_plot_enabled
         self._persist_register = persist_register
+        self._set_offline_mode = set_offline_mode
 
         self.title("Onekaka Station Monitor")
         self.configure(bg=self._BG)
@@ -71,7 +74,22 @@ class StationMonitor(tk.Tk):
             font=("Helvetica", 9, "italic"),
             bg=self._BG,
             fg="#a6e3a1",
-        ).grid(row=1, column=0, columnspan=2, pady=(0, 12))
+        ).grid(row=1, column=0, columnspan=2, pady=(0, 4))
+
+        self.offline_var = tk.BooleanVar(
+            value=bool(is_offline_mode()) if is_offline_mode is not None else False
+        )
+        tk.Checkbutton(
+            left,
+            text="Offline Mode",
+            variable=self.offline_var,
+            command=self._on_toggle_offline,
+            bg=self._BG,
+            fg=self._FG,
+            selectcolor=self._PLOT_BG,
+            activebackground=self._BG,
+            activeforeground=self._FG,
+        ).grid(row=22, column=0, columnspan=2, sticky="w", pady=(0, 8))
 
         tk.Frame(left, bg=self._SEP, height=1).grid(
             row=2, column=0, columnspan=2, sticky="ew", pady=(0, 10)
@@ -269,6 +287,10 @@ class StationMonitor(tk.Tk):
         self._rebuild_value_rows()
         self._rebuild_plot_axes()
         self._refresh()
+
+    def _on_toggle_offline(self):
+        if self._set_offline_mode is not None:
+            self._set_offline_mode(bool(self.offline_var.get()))
 
     def _on_toggle_use_now(self):
         if self.use_now_var.get():

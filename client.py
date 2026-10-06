@@ -4,7 +4,7 @@ Written by Oli T - 4/07/2025"""
 import time
 from collections import deque
 from datetime import datetime
-from threading import Lock
+from threading import Event, Lock
 
 import pymodbus.client as ModbusClient
 from pymodbus import FramerType, ModbusException
@@ -34,6 +34,23 @@ monitored_registers: dict = {}
 register_lock = Lock()
 plot_buffer_lock = Lock()
 log_state: TimeSeriesLogState = TimeSeriesLogState()
+offline_event = Event()
+
+
+def set_offline_mode(enabled: bool):
+    if enabled:
+        offline_event.set()
+    else:
+        offline_event.clear()
+
+
+def is_offline_mode() -> bool:
+    return offline_event.is_set()
+
+
+def _sleep_unless_offline(seconds: float):
+    """Sleep up to `seconds`, returning early if offline mode is enabled."""
+    offline_event.wait(seconds)
 
 
 def _ensure_plot_field(name: str):
@@ -140,6 +157,11 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
     global connection_status
 
     while True:
+        if offline_event.is_set():
+            connection_status = "Offline mode"
+            time.sleep(0.5)
+            continue
+
         client = ModbusClient.ModbusTcpClient(
             host,
             port=port,
@@ -157,11 +179,13 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
             else:
                 connection_status = "Connected"
 
-                while True:
+                while not offline_event.is_set():
                     with register_lock:
                         register_items = list(monitored_registers.items())
 
                     for name, info in register_items:
+                        if offline_event.is_set():
+                            break
                         address = info["address"]
                         reg_type = info["type"]
                         try:
@@ -181,13 +205,16 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                         except ModbusException as exc:
                             station_info_data[name] = f"Exception: {exc}"
 
-                    time.sleep(POLL_INTERVAL)
+                    _sleep_unless_offline(POLL_INTERVAL)
         except Exception as e:
             connection_status = f"Disconnected: {e} (retrying in {RECONNECT_INTERVAL}s)"
         finally:
             client.close()
 
-        time.sleep(RECONNECT_INTERVAL)
+        if offline_event.is_set():
+            connection_status = "Offline mode"
+        else:
+            _sleep_unless_offline(RECONNECT_INTERVAL)
 
 def get_connection_status():
     return connection_status
@@ -196,6 +223,10 @@ def get_connection_status():
 def data_logger_worker():
     """Log current in-memory values every 30 seconds, independent of poll cadence."""
     while True:
+        if offline_event.is_set():
+            time.sleep(0.5)
+            continue
+
         now = datetime.now()
         slot_dt = now.replace(
             second=(now.second // LOG_INTERVAL_SECONDS) * LOG_INTERVAL_SECONDS,

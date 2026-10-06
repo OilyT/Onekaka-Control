@@ -11,6 +11,7 @@ from client import (
     initialize_log_state,
     initialize_plot_buffers,
     is_plot_enabled,
+    is_offline_mode,
     modbus_station_poller,
     monitored_registers,
     plot_buffer_lock,
@@ -18,6 +19,7 @@ from client import (
     plot_timestamps,
     register_lock,
     set_plot_enabled,
+    set_offline_mode,
     station_info_data,
 )
 from data_logging import (
@@ -60,6 +62,8 @@ if __name__ == "__main__":
         get_connection_status=get_connection_status,
         is_plot_enabled=is_plot_enabled,
         set_plot_enabled=set_plot_enabled,
+        set_offline_mode=set_offline_mode,
+        is_offline_mode=is_offline_mode,
         persist_register=lambda name, info: upsert_station_register(
             name=name,
             address=info["address"],
