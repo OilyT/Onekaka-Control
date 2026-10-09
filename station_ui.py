@@ -6,13 +6,26 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 
+COLOUR_WINDOW_BACKGROUND = "#1A1A1B"
+COLOUR_TEXT = "#00ffff"
+COLOUR_ACCENT_BLUE = "#0084ff"
+COLOUR_ACCENT_BLUE_HOVER = "#74c7ec"
+COLOUR_TEXT_ON_ACCENT = "#11111b"
+COLOUR_TEXT_DIMMED = COLOUR_TEXT
+COLOUR_SEPARATOR_LINE = "#0058fc"
+COLOUR_PLOT_BACKGROUND = "#000000"
+COLOUR_PLOT_LINE = "#00ff2a"
+COLOUR_STATUS_GREEN = "#a6e3a1"
+COLOUR_MESSAGE_YELLOW = "#f9e2af"
+
+
 class StationMonitor(tk.Tk):
-    _BG = "#1e1e2e"
-    _FG = "#cdd6f4"
-    _ACCENT = "#89b4fa"
-    _DIM = "#6c7086"
-    _SEP = "#45475a"
-    _PLOT_BG = "#181825"
+    _BG = COLOUR_WINDOW_BACKGROUND
+    _FG = COLOUR_TEXT
+    _ACCENT = COLOUR_ACCENT_BLUE
+    _DIM = COLOUR_TEXT_DIMMED
+    _SEP = COLOUR_SEPARATOR_LINE
+    _PLOT_BG = COLOUR_PLOT_BACKGROUND
     _PLOT_HEIGHT_PER_AXIS = 4.2
     _PLOT_LOOKBACK_DAYS = 7
     _PLOT_WIDTH_INCHES = 8.0
@@ -73,7 +86,7 @@ class StationMonitor(tk.Tk):
             textvariable=self.status_var,
             font=("Helvetica", 9, "italic"),
             bg=self._BG,
-            fg="#a6e3a1",
+            fg=COLOUR_STATUS_GREEN,
         ).grid(row=1, column=0, columnspan=2, pady=(0, 4))
 
         self.offline_var = tk.BooleanVar(
@@ -133,8 +146,8 @@ class StationMonitor(tk.Tk):
             text="Add / Update",
             command=self._add_or_update_register,
             bg=self._ACCENT,
-            fg="#11111b",
-            activebackground="#74c7ec",
+            fg=COLOUR_TEXT_ON_ACCENT,
+            activebackground=COLOUR_ACCENT_BLUE_HOVER,
             relief="flat",
             padx=8,
             pady=4,
@@ -145,7 +158,7 @@ class StationMonitor(tk.Tk):
             textvariable=self.form_status_var,
             font=("Helvetica", 8),
             bg=self._BG,
-            fg="#f9e2af",
+            fg=COLOUR_MESSAGE_YELLOW,
         ).grid(row=9, column=0, columnspan=2, sticky="w", pady=(0, 8))
 
         tk.Frame(left, bg=self._SEP, height=1).grid(
@@ -184,8 +197,8 @@ class StationMonitor(tk.Tk):
             text="Apply Window",
             command=self._apply_window_settings,
             bg=self._ACCENT,
-            fg="#11111b",
-            activebackground="#74c7ec",
+            fg=COLOUR_TEXT_ON_ACCENT,
+            activebackground=COLOUR_ACCENT_BLUE_HOVER,
             relief="flat",
             padx=8,
             pady=4,
@@ -196,7 +209,7 @@ class StationMonitor(tk.Tk):
             textvariable=self.range_status_var,
             font=("Helvetica", 8),
             bg=self._BG,
-            fg="#f9e2af",
+            fg=COLOUR_MESSAGE_YELLOW,
         ).grid(row=16, column=0, columnspan=2, sticky="w", pady=(0, 8))
 
         tk.Frame(left, bg=self._SEP, height=1).grid(
@@ -318,6 +331,10 @@ class StationMonitor(tk.Tk):
         width_in = max(width_px / dpi, 1.0)
         height_in = max(n * self._PLOT_HEIGHT_PER_AXIS, self._PLOT_HEIGHT_PER_AXIS)
         self._fig.set_size_inches(width_in, height_in, forward=True)
+        self._fig.subplots_adjust(
+            top=1.0 - 0.4 / height_in,
+            bottom=0.5 / height_in,
+        )
 
         height_px = int(height_in * dpi)
         self._canvas_widget.configure(width=width_px, height=height_px)
@@ -673,7 +690,7 @@ class StationMonitor(tk.Tk):
                     vy.append(vy[-1])
 
             if vx:
-                ax.plot(vx, vy, color=self._ACCENT, linewidth=1.5)
+                ax.plot(vx, vy, color=COLOUR_PLOT_LINE, linewidth=1.5)
             else:
                 ax.text(
                     0.5,
@@ -698,7 +715,7 @@ class StationMonitor(tk.Tk):
             ax.set_title(name, color=self._FG, fontsize=14, pad=6, loc="left")
             ax.set_facecolor(self._PLOT_BG)
             ax.tick_params(axis="y", colors=self._DIM, labelsize=11)
-            ax.tick_params(axis="x", colors=self._DIM, labelsize=11, labelbottom=True, rotation=20, pad=2)
+            ax.tick_params(axis="x", colors=self._DIM, labelsize=11, labelbottom=True, rotation=0, pad=2)
             ax.xaxis.set_major_locator(mdates.AutoDateLocator())
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
             for spine in ax.spines.values():
