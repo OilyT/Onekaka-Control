@@ -7,7 +7,18 @@ from datetime import datetime, timedelta
 LOG_DIR = "logs"
 LOG_FIELDS = ["timestamp", "name", "address", "type", "value"]
 REGISTERS_FILE = "station_registers.csv"
-REGISTER_FIELDS = ["name", "address", "type", "min", "max"]
+REGISTER_FIELDS = ["name", "address", "type"]
+
+# Register types and their Modbus address offsets. MB is a coil; the rest are holding registers.
+REGISTER_TYPE_OFFSETS = {"MI": 0x0000, "ML": 0x7000, "MF": 0x4000, "MB": 0x0000}
+REGISTER_TYPES = list(REGISTER_TYPE_OFFSETS)
+COIL_TYPE = "MB"
+DEFAULT_REGISTER_TYPE = "MI"
+
+
+def _normalise_type(value) -> str:
+    text = (value or "").strip().upper()
+    return text if text in REGISTER_TYPE_OFFSETS else DEFAULT_REGISTER_TYPE
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 LOG_INTERVAL_SECONDS = 30
 LOG_DAYS = 8
@@ -65,7 +76,7 @@ def update_time_series_log(
                     slot,
                     name,
                     info["address"],
-                    info.get("type", "register"),
+                    info.get("type", DEFAULT_REGISTER_TYPE),
                     value if isinstance(value, (int, float)) else 0,
                 ]
             )
@@ -81,17 +92,13 @@ def init_registers_csv(registers_file: str = REGISTERS_FILE):
 def upsert_station_register(
     name: str,
     address: int,
-    reg_type: str = "register",
-    min_value=None,
-    max_value=None,
+    reg_type: str = DEFAULT_REGISTER_TYPE,
     registers_file: str = REGISTERS_FILE,
 ):
     row_data = {
         "name": name,
         "address": address,
         "type": reg_type,
-        "min": "" if min_value is None else min_value,
-        "max": "" if max_value is None else max_value,
     }
 
     init_registers_csv(registers_file)
@@ -104,9 +111,7 @@ def upsert_station_register(
                 {
                     "name": (row.get("name") or "").strip(),
                     "address": (row.get("address") or "").strip(),
-                    "type": (row.get("type") or "register").strip() or "register",
-                    "min": (row.get("min") or "").strip(),
-                    "max": (row.get("max") or "").strip(),
+                    "type": _normalise_type(row.get("type")),
                 }
             )
 
@@ -167,12 +172,9 @@ def load_station_registers(registers: dict, registers_file: str = REGISTERS_FILE
             except ValueError:
                 continue
 
-            reg_type = (row.get("type") or "register").strip() or "register"
             registers[name] = {
                 "address": address,
-                "type": reg_type,
-                "min": _parse_number(row.get("min")),
-                "max": _parse_number(row.get("max")),
+                "type": _normalise_type(row.get("type")),
             }
 
 

@@ -42,7 +42,7 @@ ALARMS = {
 }
 
 STATION_INFO = {
-    "Pond Level (mm)": {"address": 50, "type": "register", "min": 0, "max": 2500},
-    "Current Output (kW)": {"address": 33, "type": "register", "min": 0, "max": 1050},
-    "Station Setpoint (kW)": {"address": 60, "type": "register", "min": 0, "max": 1050},
+    "Pond Level (mm)": {"address": 50, "type": "MI"},
+    "Current Output (kW)": {"address": 33, "type": "MI"},
+    "Station Setpoint (kW)": {"address": 60, "type": "MI"},
 }

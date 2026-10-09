@@ -1,0 +1,243 @@
+timestamp,name,address,type,value
+2026-10-10 11:51:00,Pond Level (mm),50,register,0
+2026-10-10 11:51:00,Current Output (kW),33,register,0
+2026-10-10 11:51:00,Station Setpoint (kW),60,register,0
+2026-10-10 11:51:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:51:00,WL Integral,345,register,0
+2026-10-10 11:51:00,WL proportional,342,register,0
+2026-10-10 11:51:00,WL PID Out,350,register,0
+2026-10-10 11:51:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:51:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:51:00,WL ROC (mm/hour),368,register,0
+2026-10-10 11:51:00,Penstock Pressure (cm),31,register,0
+2026-10-10 11:51:30,Pond Level (mm),50,register,0
+2026-10-10 11:51:30,Current Output (kW),33,register,0
+2026-10-10 11:51:30,Station Setpoint (kW),60,register,0
+2026-10-10 11:51:30,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:51:30,WL Integral,345,register,0
+2026-10-10 11:51:30,WL proportional,342,register,0
+2026-10-10 11:51:30,WL PID Out,350,register,0
+2026-10-10 11:51:30,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:51:30,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:51:30,WL ROC (mm/hour),368,register,0
+2026-10-10 11:51:30,Penstock Pressure (cm),31,register,0
+2026-10-10 11:52:00,Pond Level (mm),50,register,0
+2026-10-10 11:52:00,Current Output (kW),33,register,0
+2026-10-10 11:52:00,Station Setpoint (kW),60,register,0
+2026-10-10 11:52:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:52:00,WL Integral,345,register,0
+2026-10-10 11:52:00,WL proportional,342,register,0
+2026-10-10 11:52:00,WL PID Out,350,register,0
+2026-10-10 11:52:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:52:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:52:00,WL ROC (mm/hour),368,register,0
+2026-10-10 11:52:00,Penstock Pressure (cm),31,register,0
+2026-10-10 11:52:30,Pond Level (mm),50,register,0
+2026-10-10 11:52:30,Current Output (kW),33,register,0
+2026-10-10 11:52:30,Station Setpoint (kW),60,register,0
+2026-10-10 11:52:30,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:52:30,WL Integral,345,register,0
+2026-10-10 11:52:30,WL proportional,342,register,0
+2026-10-10 11:52:30,WL PID Out,350,register,0
+2026-10-10 11:52:30,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:52:30,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:52:30,WL ROC (mm/hour),368,register,0
+2026-10-10 11:52:30,Penstock Pressure (cm),31,register,0
+2026-10-10 11:53:00,Pond Level (mm),50,register,0
+2026-10-10 11:53:00,Current Output (kW),33,register,0
+2026-10-10 11:53:00,Station Setpoint (kW),60,register,0
+2026-10-10 11:53:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:53:00,WL Integral,345,register,0
+2026-10-10 11:53:00,WL proportional,342,register,0
+2026-10-10 11:53:00,WL PID Out,350,register,0
+2026-10-10 11:53:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:53:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:53:00,WL ROC (mm/hour),368,register,0
+2026-10-10 11:53:00,Penstock Pressure (cm),31,register,0
+2026-10-10 11:53:30,Pond Level (mm),50,register,0
+2026-10-10 11:53:30,Current Output (kW),33,register,0
+2026-10-10 11:53:30,Station Setpoint (kW),60,register,0
+2026-10-10 11:53:30,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:53:30,WL Integral,345,register,0
+2026-10-10 11:53:30,WL proportional,342,register,0
+2026-10-10 11:53:30,WL PID Out,350,register,0
+2026-10-10 11:53:30,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:53:30,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:53:30,WL ROC (mm/hour),368,register,0
+2026-10-10 11:53:30,Penstock Pressure (cm),31,register,0
+2026-10-10 11:54:00,Pond Level (mm),50,register,0
+2026-10-10 11:54:00,Current Output (kW),33,register,0
+2026-10-10 11:54:00,Station Setpoint (kW),60,register,0
+2026-10-10 11:54:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:54:00,WL Integral,345,register,0
+2026-10-10 11:54:00,WL proportional,342,register,0
+2026-10-10 11:54:00,WL PID Out,350,register,0
+2026-10-10 11:54:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:54:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:54:00,WL ROC (mm/hour),368,register,0
+2026-10-10 11:54:00,Penstock Pressure (cm),31,register,0
+2026-10-10 11:57:00,Pond Level (mm),50,register,0
+2026-10-10 11:57:00,Current Output (kW),33,register,0
+2026-10-10 11:57:00,Station Setpoint (kW),60,register,0
+2026-10-10 11:57:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:57:00,WL Integral,345,register,0
+2026-10-10 11:57:00,WL proportional,342,register,0
+2026-10-10 11:57:00,WL PID Out,350,register,0
+2026-10-10 11:57:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:57:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:57:00,WL ROC (mm/hour),368,register,0
+2026-10-10 11:57:00,Penstock Pressure (cm),31,register,0
+2026-10-10 11:57:30,Pond Level (mm),50,register,0
+2026-10-10 11:57:30,Current Output (kW),33,register,0
+2026-10-10 11:57:30,Station Setpoint (kW),60,register,0
+2026-10-10 11:57:30,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:57:30,WL Integral,345,register,0
+2026-10-10 11:57:30,WL proportional,342,register,0
+2026-10-10 11:57:30,WL PID Out,350,register,0
+2026-10-10 11:57:30,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:57:30,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:57:30,WL ROC (mm/hour),368,register,0
+2026-10-10 11:57:30,Penstock Pressure (cm),31,register,0
+2026-10-10 11:58:00,Pond Level (mm),50,register,0
+2026-10-10 11:58:00,Current Output (kW),33,register,0
+2026-10-10 11:58:00,Station Setpoint (kW),60,register,0
+2026-10-10 11:58:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:58:00,WL Integral,345,register,0
+2026-10-10 11:58:00,WL proportional,342,register,0
+2026-10-10 11:58:00,WL PID Out,350,register,0
+2026-10-10 11:58:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:58:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:58:00,WL ROC (mm/hour),368,register,0
+2026-10-10 11:58:00,Penstock Pressure (cm),31,register,0
+2026-10-10 11:58:30,Pond Level (mm),50,register,0
+2026-10-10 11:58:30,Current Output (kW),33,register,0
+2026-10-10 11:58:30,Station Setpoint (kW),60,register,0
+2026-10-10 11:58:30,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:58:30,WL Integral,345,register,0
+2026-10-10 11:58:30,WL proportional,342,register,0
+2026-10-10 11:58:30,WL PID Out,350,register,0
+2026-10-10 11:58:30,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:58:30,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:58:30,WL ROC (mm/hour),368,register,0
+2026-10-10 11:58:30,Penstock Pressure (cm),31,register,0
+2026-10-10 11:59:00,Pond Level (mm),50,register,0
+2026-10-10 11:59:00,Current Output (kW),33,register,0
+2026-10-10 11:59:00,Station Setpoint (kW),60,register,0
+2026-10-10 11:59:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:59:00,WL Integral,345,register,0
+2026-10-10 11:59:00,WL proportional,342,register,0
+2026-10-10 11:59:00,WL PID Out,350,register,0
+2026-10-10 11:59:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:59:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:59:00,WL ROC (mm/hour),368,register,0
+2026-10-10 11:59:00,Penstock Pressure (cm),31,register,0
+2026-10-10 11:59:30,Pond Level (mm),50,register,0
+2026-10-10 11:59:30,Current Output (kW),33,register,0
+2026-10-10 11:59:30,Station Setpoint (kW),60,register,0
+2026-10-10 11:59:30,Water Level Setpoint (mm),340,register,0
+2026-10-10 11:59:30,WL Integral,345,register,0
+2026-10-10 11:59:30,WL proportional,342,register,0
+2026-10-10 11:59:30,WL PID Out,350,register,0
+2026-10-10 11:59:30,Intake Batt (Volts x10),49,register,0
+2026-10-10 11:59:30,Intake Differential Pressure (mm),304,register,0
+2026-10-10 11:59:30,WL ROC (mm/hour),368,register,0
+2026-10-10 11:59:30,Penstock Pressure (cm),31,register,0
+2026-10-10 12:00:00,Pond Level (mm),50,register,0
+2026-10-10 12:00:00,Current Output (kW),33,register,0
+2026-10-10 12:00:00,Station Setpoint (kW),60,register,0
+2026-10-10 12:00:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 12:00:00,WL Integral,345,register,0
+2026-10-10 12:00:00,WL proportional,342,register,0
+2026-10-10 12:00:00,WL PID Out,350,register,0
+2026-10-10 12:00:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 12:00:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 12:00:00,WL ROC (mm/hour),368,register,0
+2026-10-10 12:00:00,Penstock Pressure (cm),31,register,0
+2026-10-10 12:00:30,Pond Level (mm),50,register,0
+2026-10-10 12:00:30,Current Output (kW),33,register,0
+2026-10-10 12:00:30,Station Setpoint (kW),60,register,0
+2026-10-10 12:00:30,Water Level Setpoint (mm),340,register,0
+2026-10-10 12:00:30,WL Integral,345,register,0
+2026-10-10 12:00:30,WL proportional,342,register,0
+2026-10-10 12:00:30,WL PID Out,350,register,0
+2026-10-10 12:00:30,Intake Batt (Volts x10),49,register,0
+2026-10-10 12:00:30,Intake Differential Pressure (mm),304,register,0
+2026-10-10 12:00:30,WL ROC (mm/hour),368,register,0
+2026-10-10 12:00:30,Penstock Pressure (cm),31,register,0
+2026-10-10 12:01:00,Pond Level (mm),50,register,0
+2026-10-10 12:01:00,Current Output (kW),33,register,0
+2026-10-10 12:01:00,Station Setpoint (kW),60,register,0
+2026-10-10 12:01:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 12:01:00,WL Integral,345,register,0
+2026-10-10 12:01:00,WL proportional,342,register,0
+2026-10-10 12:01:00,WL PID Out,350,register,0
+2026-10-10 12:01:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 12:01:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 12:01:00,WL ROC (mm/hour),368,register,0
+2026-10-10 12:01:00,Penstock Pressure (cm),31,register,0
+2026-10-10 12:01:30,Pond Level (mm),50,register,0
+2026-10-10 12:01:30,Current Output (kW),33,register,0
+2026-10-10 12:01:30,Station Setpoint (kW),60,register,0
+2026-10-10 12:01:30,Water Level Setpoint (mm),340,register,0
+2026-10-10 12:01:30,WL Integral,345,register,0
+2026-10-10 12:01:30,WL proportional,342,register,0
+2026-10-10 12:01:30,WL PID Out,350,register,0
+2026-10-10 12:01:30,Intake Batt (Volts x10),49,register,0
+2026-10-10 12:01:30,Intake Differential Pressure (mm),304,register,0
+2026-10-10 12:01:30,WL ROC (mm/hour),368,register,0
+2026-10-10 12:01:30,Penstock Pressure (cm),31,register,0
+2026-10-10 12:02:00,Pond Level (mm),50,register,0
+2026-10-10 12:02:00,Current Output (kW),33,register,0
+2026-10-10 12:02:00,Station Setpoint (kW),60,register,0
+2026-10-10 12:02:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 12:02:00,WL Integral,345,register,0
+2026-10-10 12:02:00,WL proportional,342,register,0
+2026-10-10 12:02:00,WL PID Out,350,register,0
+2026-10-10 12:02:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 12:02:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 12:02:00,WL ROC (mm/hour),368,register,0
+2026-10-10 12:02:00,Penstock Pressure (cm),31,register,0
+2026-10-10 12:02:30,Pond Level (mm),50,register,0
+2026-10-10 12:02:30,Current Output (kW),33,register,0
+2026-10-10 12:02:30,Station Setpoint (kW),60,register,0
+2026-10-10 12:02:30,Water Level Setpoint (mm),340,register,0
+2026-10-10 12:02:30,WL Integral,345,register,0
+2026-10-10 12:02:30,WL proportional,342,register,0
+2026-10-10 12:02:30,WL PID Out,350,register,0
+2026-10-10 12:02:30,Intake Batt (Volts x10),49,register,0
+2026-10-10 12:02:30,Intake Differential Pressure (mm),304,register,0
+2026-10-10 12:02:30,WL ROC (mm/hour),368,register,0
+2026-10-10 12:02:30,Penstock Pressure (cm),31,register,0
+2026-10-10 12:03:00,Pond Level (mm),50,register,0
+2026-10-10 12:03:00,Current Output (kW),33,register,0
+2026-10-10 12:03:00,Station Setpoint (kW),60,register,0
+2026-10-10 12:03:00,Water Level Setpoint (mm),340,register,0
+2026-10-10 12:03:00,WL Integral,345,register,0
+2026-10-10 12:03:00,WL proportional,342,register,0
+2026-10-10 12:03:00,WL PID Out,350,register,0
+2026-10-10 12:03:00,Intake Batt (Volts x10),49,register,0
+2026-10-10 12:03:00,Intake Differential Pressure (mm),304,register,0
+2026-10-10 12:03:00,WL ROC (mm/hour),368,register,0
+2026-10-10 12:03:00,Penstock Pressure (cm),31,register,0
+2026-10-10 12:03:30,Pond Level (mm),50,MI,0
+2026-10-10 12:03:30,Current Output (kW),33,MI,0
+2026-10-10 12:03:30,Station Setpoint (kW),60,MI,0
+2026-10-10 12:03:30,Water Level Setpoint (mm),340,MI,0
+2026-10-10 12:03:30,WL Integral,345,MI,0
+2026-10-10 12:03:30,WL proportional,342,MI,0
+2026-10-10 12:03:30,WL PID Out,350,MI,0
+2026-10-10 12:03:30,Intake Batt (Volts x10),49,MI,0
+2026-10-10 12:03:30,Intake Differential Pressure (mm),304,MI,0
+2026-10-10 12:03:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 12:03:30,Penstock Pressure (cm),31,MI,0
+2026-10-10 12:04:00,Pond Level (mm),50,MI,0
+2026-10-10 12:04:00,Current Output (kW),33,MI,0
+2026-10-10 12:04:00,Station Setpoint (kW),60,MI,0
+2026-10-10 12:04:00,Water Level Setpoint (mm),340,MI,0
+2026-10-10 12:04:00,WL Integral,345,MI,0
+2026-10-10 12:04:00,WL proportional,342,MI,0
+2026-10-10 12:04:00,WL PID Out,350,MI,0
+2026-10-10 12:04:00,Intake Batt (Volts x10),49,MI,0
+2026-10-10 12:04:00,Intake Differential Pressure (mm),304,MI,0
+2026-10-10 12:04:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 12:04:00,Penstock Pressure (cm),31,MI,0

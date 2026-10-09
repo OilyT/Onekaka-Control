@@ -1,12 +1,12 @@
-name,address,type,min,max
-Pond Level (mm),50,register,0,2500
-Current Output (kW),33,register,0,1050
-Station Setpoint (kW),60,register,0.0,1100.0
-Water Level Setpoint (mm),340,register,0.0,2500.0
-WL Integral,345,register,0.0,1050.0
-WL proportional,342,register,0.0,1050.0
-WL PID Out,350,register,0.0,1100.0
-Intake Batt (Volts x10),49,register,100.0,300.0
-Intake Differential Pressure (mm),304,register,0.0,400.0
-WL ROC (mm/hour),368,register,0.0,1000.0
-Penstock Pressure (cm),31,register,0.0,25000.0
+name,address,type
+Pond Level (mm),50,MI
+Current Output (kW),33,MI
+Station Setpoint (kW),60,MI
+Water Level Setpoint (mm),340,MI
+WL Integral,345,MI
+WL proportional,342,MI
+WL PID Out,350,MI
+Intake Batt (Volts x10),49,MI
+Intake Differential Pressure (mm),304,MI
+WL ROC (mm/hour),368,MI
+Penstock Pressure (cm),31,MI

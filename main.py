@@ -76,9 +76,7 @@ if __name__ == "__main__":
         persist_register=lambda name, info: upsert_station_register(
             name=name,
             address=info["address"],
-            reg_type=info.get("type", "register"),
-            min_value=info.get("min"),
-            max_value=info.get("max"),
+            reg_type=info.get("type", "MI"),
             registers_file=REGISTERS_FILE,
         ),
     )

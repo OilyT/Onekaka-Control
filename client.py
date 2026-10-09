@@ -14,6 +14,8 @@ from data_logging import (
     LOG_DIR,
     LOG_INTERVAL_SECONDS,
     LOG_TOTAL_SLOTS,
+    REGISTER_TYPE_OFFSETS,
+    COIL_TYPE,
     TIMESTAMP_FORMAT,
     init_log_dir,
     update_time_series_log,
@@ -187,8 +189,17 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                         address = info["address"]
                         reg_type = info["type"]
                         try:
-                            if reg_type == "register":
-                                rr = client.read_holding_registers(address, count=1, device_id=1)
+                            offset = REGISTER_TYPE_OFFSETS.get(reg_type)
+                            if offset is None:
+                                station_info_data[name] = "Unsupported type"
+                            elif reg_type == COIL_TYPE:
+                                rr = client.read_coils(address + offset, count=1, device_id=1)
+                                if rr.isError():
+                                    station_info_data[name] = "Modbus Error"
+                                else:
+                                    station_info_data[name] = int(bool(rr.bits[0]))
+                            else:
+                                rr = client.read_holding_registers(address + offset, count=1, device_id=1)
                                 if rr.isError():
                                     station_info_data[name] = "Modbus Error"
                                 else:
@@ -198,8 +209,6 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                                         else rr.registers[0]
                                     )
                                     station_info_data[name] = val
-                            else:
-                                station_info_data[name] = "Unsupported type"
                         except ModbusException as exc:
                             station_info_data[name] = f"Exception: {exc}"
 

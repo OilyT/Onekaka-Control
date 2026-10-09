@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import time
 import tkinter as tk
+from tkinter import ttk
 from datetime import datetime, timedelta
+from data_logging import DEFAULT_REGISTER_TYPE, REGISTER_TYPES
 import matplotlib.dates as mdates
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -112,8 +114,7 @@ class StationMonitor(tk.Tk):
 
         self.name_var = tk.StringVar()
         self.address_var = tk.StringVar()
-        self.min_var = tk.StringVar()
-        self.max_var = tk.StringVar()
+        self.type_var = tk.StringVar(value=DEFAULT_REGISTER_TYPE)
         self.end_time_var = tk.StringVar(value=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         self.window_hours_var = tk.StringVar(value="4")
         self.use_now_var = tk.BooleanVar(value=True)
@@ -137,11 +138,14 @@ class StationMonitor(tk.Tk):
         tk.Label(left, text="Address", bg=self._BG, fg=self._FG).grid(row=5, column=0, sticky="w")
         tk.Entry(left, textvariable=self.address_var, width=18).grid(row=5, column=1, sticky="e")
 
-        tk.Label(left, text="Min", bg=self._BG, fg=self._FG).grid(row=6, column=0, sticky="w")
-        tk.Entry(left, textvariable=self.min_var, width=18).grid(row=6, column=1, sticky="e")
-
-        tk.Label(left, text="Max", bg=self._BG, fg=self._FG).grid(row=7, column=0, sticky="w")
-        tk.Entry(left, textvariable=self.max_var, width=18).grid(row=7, column=1, sticky="e")
+        tk.Label(left, text="Type", bg=self._BG, fg=self._FG).grid(row=6, column=0, sticky="w")
+        ttk.Combobox(
+            left,
+            textvariable=self.type_var,
+            values=REGISTER_TYPES,
+            state="readonly",
+            width=15,
+        ).grid(row=6, column=1, sticky="e")
 
         tk.Button(
             left,
@@ -426,7 +430,7 @@ class StationMonitor(tk.Tk):
             self._numeric_fields = [
                 name
                 for name, info in self._monitored_registers.items()
-                if info["type"] == "register" and self._field_is_plotted(name)
+                if self._field_is_plotted(name)
             ]
 
         self._fig.clear()
@@ -439,8 +443,7 @@ class StationMonitor(tk.Tk):
     def _add_or_update_register(self):
         name = self.name_var.get().strip()
         address_text = self.address_var.get().strip()
-        min_text = self.min_var.get().strip()
-        max_text = self.max_var.get().strip()
+        reg_type = self.type_var.get().strip()
 
         if not name:
             self.form_status_var.set("Name is required")
@@ -452,23 +455,14 @@ class StationMonitor(tk.Tk):
             self.form_status_var.set("Address must be an integer")
             return
 
-        try:
-            min_value = float(min_text)
-            max_value = float(max_text)
-        except ValueError:
-            self.form_status_var.set("Min and max must be numbers")
-            return
-
-        if min_value >= max_value:
-            self.form_status_var.set("Min must be less than max")
+        if reg_type not in REGISTER_TYPES:
+            self.form_status_var.set("Select a type")
             return
 
         with self._register_lock:
             self._monitored_registers[name] = {
                 "address": address,
-                "type": "register",
-                "min": min_value,
-                "max": max_value,
+                "type": reg_type,
             }
 
         if self._persist_register is not None:
@@ -476,9 +470,7 @@ class StationMonitor(tk.Tk):
                 name,
                 {
                     "address": address,
-                    "type": "register",
-                    "min": min_value,
-                    "max": max_value,
+                    "type": reg_type,
                 },
             )
 
@@ -645,9 +637,6 @@ class StationMonitor(tk.Tk):
         cutoff, latest_log_dt, timestamps, series_by_name, first_idx = window_data
         self._series_cache = {}
         self._hover_annotation = None
-
-        with self._register_lock:
-            config_by_name = dict(self._monitored_registers)
 
         if not self._numeric_fields:
             ax = self._axes[0]
