@@ -690,11 +690,10 @@ class StationMonitor(tk.Tk):
 
             self._series_cache[ax] = {"name": name, "xs": vx, "ys": vy}
 
-            cfg = config_by_name.get(name, {})
-            min_y = cfg.get("min")
-            max_y = cfg.get("max")
-            if isinstance(min_y, (int, float)) and isinstance(max_y, (int, float)) and min_y < max_y:
-                ax.set_ylim(min_y, max_y)
+            if vy:
+                lo, hi = min(vy), max(vy)
+                pad = (hi - lo) * 0.05 or max(abs(hi) * 0.05, 1.0)
+                ax.set_ylim(lo - pad, hi + pad)
 
             ax.set_title(name, color=self._FG, fontsize=14, pad=6, loc="left")
             ax.set_facecolor(self._PLOT_BG)

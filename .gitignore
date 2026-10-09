@@ -3,3 +3,4 @@ station_log.csv
 .venv/
 .vscode/
 __pycache__/
+.logs/

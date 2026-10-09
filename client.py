@@ -9,12 +9,11 @@ from threading import Event, Lock
 import pymodbus.client as ModbusClient
 from pymodbus import FramerType, ModbusException
 from data_logging import (
-    CSV_FILE,
+    LOG_DIR,
     LOG_INTERVAL_SECONDS,
     LOG_TOTAL_SLOTS,
     TIMESTAMP_FORMAT,
-    TimeSeriesLogState,
-    build_time_series_log_state,
+    init_log_dir,
     update_time_series_log,
 )
 
@@ -33,7 +32,6 @@ plotted_fields: set[str] = set()
 monitored_registers: dict = {}
 register_lock = Lock()
 plot_buffer_lock = Lock()
-log_state: TimeSeriesLogState = TimeSeriesLogState()
 offline_event = Event()
 
 
@@ -64,7 +62,6 @@ def _ensure_plot_field(name: str):
 def initialize_plotted_fields(registers: dict):
     with plot_buffer_lock:
         plotted_fields.clear()
-        plotted_fields.update(registers.keys())
 
 
 def is_plot_enabled(name: str) -> bool:
@@ -111,8 +108,7 @@ def initialize_plot_buffers(snapshots: list[dict], registers: dict):
 
 
 def initialize_log_state(registers: dict, now: datetime | None = None):
-    global log_state
-    log_state = build_time_series_log_state(registers, csv_file=CSV_FILE, now=now)
+    init_log_dir(LOG_DIR)
 
 
 def append_plot_buffers(slot_ts: str, register_names: list[str], current_values: dict):
@@ -245,9 +241,8 @@ def data_logger_worker():
         update_time_series_log(
             register_copy,
             current_values,
-            csv_file=CSV_FILE,
+            log_dir=LOG_DIR,
             now=now,
-            state=log_state,
         )
 
         snapshot = {"timestamp": slot_ts}
