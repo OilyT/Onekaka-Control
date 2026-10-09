@@ -3,6 +3,7 @@ Written by Oli T - 4/07/2025"""
 
 from __future__ import annotations
 
+import struct
 import time
 from collections import deque
 from datetime import datetime
@@ -26,6 +27,8 @@ RECONNECT_INTERVAL = 30  # seconds between reconnect attempts
 MODBUS_TIMEOUT_SECONDS = 10
 MODBUS_RETRIES = 0
 HISTORY_LENGTH = LOG_TOTAL_SLOTS
+WIDE_TYPES = ("ML", "MF")  # types stored as two consecutive 16-bit registers
+LOW_WORD_FIRST = True      # word order of 32-bit values; set False if values look wrong
 
 station_info_data: dict = {}
 connection_status: str = "Connecting..."
@@ -37,6 +40,21 @@ monitored_registers: dict = {}
 register_lock = Lock()
 plot_buffer_lock = Lock()
 offline_event = Event()
+
+
+def _decode_registers(reg_type: str, registers: list[int]):
+    """Decode raw 16-bit registers: MI = signed 16-bit, ML = signed 32-bit, MF = 32-bit float."""
+    if reg_type in WIDE_TYPES:
+        low, high = registers[0], registers[1]
+        if not LOW_WORD_FIRST:
+            low, high = high, low
+        raw = struct.pack(">I", (high << 16) | low)
+        if reg_type == "MF":
+            return round(struct.unpack(">f", raw)[0], 4)
+        return struct.unpack(">i", raw)[0]
+
+    value = registers[0]
+    return value - 0x10000 if value >= 0x8000 else value
 
 
 def set_offline_mode(enabled: bool):
@@ -199,16 +217,12 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                                 else:
                                     station_info_data[name] = int(bool(rr.bits[0]))
                             else:
-                                rr = client.read_holding_registers(address + offset, count=1, device_id=1)
-                                if rr.isError():
+                                count = 2 if reg_type in WIDE_TYPES else 1
+                                rr = client.read_holding_registers(address + offset, count=count, device_id=1)
+                                if rr.isError() or len(rr.registers) < count:
                                     station_info_data[name] = "Modbus Error"
                                 else:
-                                    val = (
-                                        rr.registers[0] - 0x10000
-                                        if rr.registers[0] >= 0x8000
-                                        else rr.registers[0]
-                                    )
-                                    station_info_data[name] = val
+                                    station_info_data[name] = _decode_registers(reg_type, rr.registers)
                         except ModbusException as exc:
                             station_info_data[name] = f"Exception: {exc}"
 
