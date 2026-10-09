@@ -1,6 +1,8 @@
 """Onekaka hydro-power station monitor
 Written by Oli T - 4/07/2025"""
 
+from __future__ import annotations
+
 import time
 from collections import deque
 from datetime import datetime
