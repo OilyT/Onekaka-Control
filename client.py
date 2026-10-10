@@ -28,7 +28,6 @@ MODBUS_TIMEOUT_SECONDS = 10
 MODBUS_RETRIES = 0
 HISTORY_LENGTH = LOG_TOTAL_SLOTS
 WIDE_TYPES = ("ML", "MF")  # types stored as two consecutive 16-bit registers
-LOW_WORD_FIRST = True      # word order of 32-bit values; set False if values look wrong
 
 station_info_data: dict = {}
 connection_status: str = "Connecting..."
@@ -42,15 +41,16 @@ plot_buffer_lock = Lock()
 offline_event = Event()
 
 
-def _decode_registers(reg_type: str, registers: list[int]):
+def _decode_register_value(reg_type: str, registers: list[int]):
     """Decode raw 16-bit registers: MI = signed 16-bit, ML = signed 32-bit, MF = 32-bit float."""
     if reg_type in WIDE_TYPES:
         low, high = registers[0], registers[1]
-        if not LOW_WORD_FIRST:
-            low, high = high, low
-        raw = struct.pack(">I", (high << 16) | low)
+
         if reg_type == "MF":
+            raw = struct.pack(">I", (low << 16) | high)
             return round(struct.unpack(">f", raw)[0], 4)
+        
+        raw = struct.pack(">I", (high << 16) | low)
         return struct.unpack(">i", raw)[0]
 
     value = registers[0]
@@ -222,7 +222,10 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                                 if rr.isError() or len(rr.registers) < count:
                                     station_info_data[name] = "Modbus Error"
                                 else:
-                                    station_info_data[name] = _decode_registers(reg_type, rr.registers)
+                                    station_info_data[name] = _decode_register_value(
+                                        reg_type,
+                                        rr.registers,
+                                    )
                         except ModbusException as exc:
                             station_info_data[name] = f"Exception: {exc}"
 
