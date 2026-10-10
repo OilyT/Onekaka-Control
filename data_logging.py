@@ -77,7 +77,7 @@ def update_time_series_log(
                     name,
                     info["address"],
                     info.get("type", DEFAULT_REGISTER_TYPE),
-                    value if isinstance(value, (int, float)) else 0,
+                    value if isinstance(value, (int, float)) else "",
                 ]
             )
 
@@ -207,7 +207,7 @@ def load_history_from_csv(log_dir: str = LOG_DIR, max_points: int | None = None)
                     names.append(name)
                 snapshot = snapshots_by_timestamp.setdefault(timestamp, {"timestamp": timestamp})
                 value = _parse_number(row.get("value"))
-                snapshot[name] = 0 if value is None else value
+                snapshot[name] = value
 
     timestamps_sorted = sorted(
         snapshots_by_timestamp.keys(),
@@ -216,7 +216,7 @@ def load_history_from_csv(log_dir: str = LOG_DIR, max_points: int | None = None)
     snapshots = [snapshots_by_timestamp[ts] for ts in timestamps_sorted]
     for snapshot in snapshots:
         for name in names:
-            snapshot.setdefault(name, 0)
+            snapshot.setdefault(name, None)
 
     if max_points is not None and max_points > 0:
         snapshots = snapshots[-max_points:]

@@ -1,0 +1,13 @@
+name,address,type
+Pond Level (mm),50,MI
+Current Output (kW),33,MI
+Station Setpoint (kW),60,MI
+Water Level Setpoint (mm),340,MI
+WL Integral,345,MI
+WL proportional,342,MI
+WL PID Out,350,MI
+Intake Batt (Volts x10),49,MI
+Intake Differential Pressure (mm),304,MI
+WL ROC (mm/hour),368,MI
+Penstock Pressure (cm),31,MI
+Est Bypass Flow (l/s),15,MF

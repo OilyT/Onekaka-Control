@@ -1351,3 +1351,532 @@ timestamp,name,address,type,value
 2026-10-10 13:30:00,Penstock Pressure (cm),31,MI,21659
 2026-10-10 13:30:00,Est Bypass Flow (l/s),15,MF,7.2678
 2026-10-10 13:30:00,uptime (s),0,ML,73671
+2026-10-10 13:30:30,Pond Level (mm),50,MI,2189
+2026-10-10 13:30:30,Current Output (kW),33,MI,173
+2026-10-10 13:30:30,Station Setpoint (kW),60,MI,175
+2026-10-10 13:30:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:30:30,WL Integral,345,MI,170
+2026-10-10 13:30:30,WL proportional,342,MI,5
+2026-10-10 13:30:30,WL PID Out,350,MI,175
+2026-10-10 13:30:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:30:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:30:30,WL ROC (mm/hour),368,MI,-30
+2026-10-10 13:30:30,Penstock Pressure (cm),31,MI,21659
+2026-10-10 13:30:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:30:30,uptime (s),0,ML,73698
+2026-10-10 13:31:00,Pond Level (mm),50,MI,2188
+2026-10-10 13:31:00,Current Output (kW),33,MI,155
+2026-10-10 13:31:00,Station Setpoint (kW),60,MI,170
+2026-10-10 13:31:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:31:00,WL Integral,345,MI,170
+2026-10-10 13:31:00,WL proportional,342,MI,0
+2026-10-10 13:31:00,WL PID Out,350,MI,170
+2026-10-10 13:31:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:31:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:31:00,WL ROC (mm/hour),368,MI,-30
+2026-10-10 13:31:00,Penstock Pressure (cm),31,MI,21659
+2026-10-10 13:31:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:31:00,uptime (s),0,ML,73730
+2026-10-10 13:31:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:31:30,Current Output (kW),33,MI,166
+2026-10-10 13:31:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:31:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:31:30,WL Integral,345,MI,170
+2026-10-10 13:31:30,WL proportional,342,MI,0
+2026-10-10 13:31:30,WL PID Out,350,MI,170
+2026-10-10 13:31:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:31:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:31:30,WL ROC (mm/hour),368,MI,-30
+2026-10-10 13:31:30,Penstock Pressure (cm),31,MI,21659
+2026-10-10 13:31:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:31:30,uptime (s),0,ML,73756
+2026-10-10 13:32:00,Pond Level (mm),50,MI,2188
+2026-10-10 13:32:00,Current Output (kW),33,MI,150
+2026-10-10 13:32:00,Station Setpoint (kW),60,MI,170
+2026-10-10 13:32:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:32:00,WL Integral,345,MI,170
+2026-10-10 13:32:00,WL proportional,342,MI,0
+2026-10-10 13:32:00,WL PID Out,350,MI,170
+2026-10-10 13:32:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:32:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:32:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:32:00,Penstock Pressure (cm),31,MI,21688
+2026-10-10 13:32:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:32:00,uptime (s),0,ML,73788
+2026-10-10 13:32:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:32:30,Current Output (kW),33,MI,167
+2026-10-10 13:32:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:32:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:32:30,WL Integral,345,MI,170
+2026-10-10 13:32:30,WL proportional,342,MI,0
+2026-10-10 13:32:30,WL PID Out,350,MI,170
+2026-10-10 13:32:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:32:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:32:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:32:30,Penstock Pressure (cm),31,MI,21717
+2026-10-10 13:32:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:32:30,uptime (s),0,ML,73816
+2026-10-10 13:33:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:33:00,Current Output (kW),33,MI,174
+2026-10-10 13:33:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:33:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:33:00,WL Integral,345,MI,170
+2026-10-10 13:33:00,WL proportional,342,MI,5
+2026-10-10 13:33:00,WL PID Out,350,MI,175
+2026-10-10 13:33:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:33:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:33:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:33:00,Penstock Pressure (cm),31,MI,21659
+2026-10-10 13:33:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:33:00,uptime (s),0,ML,73847
+2026-10-10 13:33:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:33:30,Current Output (kW),33,MI,159
+2026-10-10 13:33:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:33:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:33:30,WL Integral,345,MI,170
+2026-10-10 13:33:30,WL proportional,342,MI,0
+2026-10-10 13:33:30,WL PID Out,350,MI,170
+2026-10-10 13:33:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:33:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:33:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:33:30,Penstock Pressure (cm),31,MI,21659
+2026-10-10 13:33:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:33:30,uptime (s),0,ML,73880
+2026-10-10 13:34:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:34:00,Current Output (kW),33,MI,169
+2026-10-10 13:34:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:34:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:34:00,WL Integral,345,MI,170
+2026-10-10 13:34:00,WL proportional,342,MI,5
+2026-10-10 13:34:00,WL PID Out,350,MI,175
+2026-10-10 13:34:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:34:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:34:00,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:34:00,Penstock Pressure (cm),31,MI,21659
+2026-10-10 13:34:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:34:00,uptime (s),0,ML,73908
+2026-10-10 13:34:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:34:30,Current Output (kW),33,MI,147
+2026-10-10 13:34:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:34:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:34:30,WL Integral,345,MI,170
+2026-10-10 13:34:30,WL proportional,342,MI,0
+2026-10-10 13:34:30,WL PID Out,350,MI,170
+2026-10-10 13:34:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:34:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:34:30,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:34:30,Penstock Pressure (cm),31,MI,21659
+2026-10-10 13:34:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:34:30,uptime (s),0,ML,73940
+2026-10-10 13:35:00,Pond Level (mm),50,MI,2188
+2026-10-10 13:35:00,Current Output (kW),33,MI,166
+2026-10-10 13:35:00,Station Setpoint (kW),60,MI,170
+2026-10-10 13:35:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:35:00,WL Integral,345,MI,170
+2026-10-10 13:35:00,WL proportional,342,MI,0
+2026-10-10 13:35:00,WL PID Out,350,MI,170
+2026-10-10 13:35:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:35:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:35:00,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:35:00,Penstock Pressure (cm),31,MI,21717
+2026-10-10 13:35:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:35:00,uptime (s),0,ML,73968
+2026-10-10 13:35:30,Pond Level (mm),50,MI,2189
+2026-10-10 13:35:30,Current Output (kW),33,MI,172
+2026-10-10 13:35:30,Station Setpoint (kW),60,MI,175
+2026-10-10 13:35:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:35:30,WL Integral,345,MI,170
+2026-10-10 13:35:30,WL proportional,342,MI,5
+2026-10-10 13:35:30,WL PID Out,350,MI,175
+2026-10-10 13:35:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:35:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:35:30,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:35:30,Penstock Pressure (cm),31,MI,21659
+2026-10-10 13:35:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:35:30,uptime (s),0,ML,74000
+2026-10-10 13:38:30,Pond Level (mm),50,MI,0
+2026-10-10 13:38:30,Current Output (kW),33,MI,0
+2026-10-10 13:38:30,Station Setpoint (kW),60,MI,0
+2026-10-10 13:38:30,Water Level Setpoint (mm),340,MI,0
+2026-10-10 13:38:30,WL Integral,345,MI,0
+2026-10-10 13:38:30,WL proportional,342,MI,0
+2026-10-10 13:38:30,WL PID Out,350,MI,0
+2026-10-10 13:38:30,Intake Batt (Volts x10),49,MI,0
+2026-10-10 13:38:30,Intake Differential Pressure (mm),304,MI,0
+2026-10-10 13:38:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:38:30,Penstock Pressure (cm),31,MI,0
+2026-10-10 13:38:30,Est Bypass Flow (l/s),15,MF,0
+2026-10-10 13:39:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:39:00,Current Output (kW),33,MI,174
+2026-10-10 13:39:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:39:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:39:00,WL Integral,345,MI,170
+2026-10-10 13:39:00,WL proportional,342,MI,5
+2026-10-10 13:39:00,WL PID Out,350,MI,175
+2026-10-10 13:39:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:39:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:39:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:39:00,Penstock Pressure (cm),31,MI,21688
+2026-10-10 13:39:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:39:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:39:30,Current Output (kW),33,MI,160
+2026-10-10 13:39:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:39:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:39:30,WL Integral,345,MI,170
+2026-10-10 13:39:30,WL proportional,342,MI,0
+2026-10-10 13:39:30,WL PID Out,350,MI,170
+2026-10-10 13:39:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:39:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:39:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:39:30,Penstock Pressure (cm),31,MI,21688
+2026-10-10 13:39:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:40:00,Pond Level (mm),50,MI,2188
+2026-10-10 13:40:00,Current Output (kW),33,MI,168
+2026-10-10 13:40:00,Station Setpoint (kW),60,MI,170
+2026-10-10 13:40:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:40:00,WL Integral,345,MI,170
+2026-10-10 13:40:00,WL proportional,342,MI,0
+2026-10-10 13:40:00,WL PID Out,350,MI,170
+2026-10-10 13:40:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:40:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:40:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:40:00,Penstock Pressure (cm),31,MI,21688
+2026-10-10 13:40:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:40:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:40:30,Current Output (kW),33,MI,153
+2026-10-10 13:40:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:40:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:40:30,WL Integral,345,MI,170
+2026-10-10 13:40:30,WL proportional,342,MI,0
+2026-10-10 13:40:30,WL PID Out,350,MI,170
+2026-10-10 13:40:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:40:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:40:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:40:30,Penstock Pressure (cm),31,MI,21717
+2026-10-10 13:40:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:40:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:41:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:41:00,Current Output (kW),33,MI,163
+2026-10-10 13:41:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:41:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:41:00,WL Integral,345,MI,170
+2026-10-10 13:41:00,WL proportional,342,MI,5
+2026-10-10 13:41:00,WL PID Out,350,MI,175
+2026-10-10 13:41:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:41:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:41:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:41:00,Penstock Pressure (cm),31,MI,21717
+2026-10-10 13:41:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:41:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:41:30,Pond Level (mm),50,MI,0
+2026-10-10 13:41:30,Current Output (kW),33,MI,0
+2026-10-10 13:41:30,Station Setpoint (kW),60,MI,0
+2026-10-10 13:41:30,Water Level Setpoint (mm),340,MI,0
+2026-10-10 13:41:30,WL Integral,345,MI,0
+2026-10-10 13:41:30,WL proportional,342,MI,0
+2026-10-10 13:41:30,WL PID Out,350,MI,0
+2026-10-10 13:41:30,Intake Batt (Volts x10),49,MI,0
+2026-10-10 13:41:30,Intake Differential Pressure (mm),304,MI,0
+2026-10-10 13:41:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:41:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:41:30,Est Bypass Flow (l/s),15,MF,0
+2026-10-10 13:42:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:42:00,Current Output (kW),33,MI,158
+2026-10-10 13:42:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:42:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:42:00,WL Integral,345,MI,170
+2026-10-10 13:42:00,WL proportional,342,MI,5
+2026-10-10 13:42:00,WL PID Out,350,MI,175
+2026-10-10 13:42:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:42:00,Intake Differential Pressure (mm),304,MI,18
+2026-10-10 13:42:00,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:42:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:42:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:42:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:42:30,Current Output (kW),33,MI,165
+2026-10-10 13:42:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:42:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:42:30,WL Integral,345,MI,170
+2026-10-10 13:42:30,WL proportional,342,MI,0
+2026-10-10 13:42:30,WL PID Out,350,MI,170
+2026-10-10 13:42:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:42:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:42:30,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:42:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:42:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:43:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:43:00,Current Output (kW),33,MI,164
+2026-10-10 13:43:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:43:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:43:00,WL Integral,345,MI,170
+2026-10-10 13:43:00,WL proportional,342,MI,5
+2026-10-10 13:43:00,WL PID Out,350,MI,175
+2026-10-10 13:43:00,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:43:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:43:00,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:43:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:43:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:43:30,Pond Level (mm),50,MI,2189
+2026-10-10 13:43:30,Current Output (kW),33,MI,170
+2026-10-10 13:43:30,Station Setpoint (kW),60,MI,175
+2026-10-10 13:43:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:43:30,WL Integral,345,MI,170
+2026-10-10 13:43:30,WL proportional,342,MI,5
+2026-10-10 13:43:30,WL PID Out,350,MI,175
+2026-10-10 13:43:30,Intake Batt (Volts x10),49,MI,255
+2026-10-10 13:43:30,Intake Differential Pressure (mm),304,MI,18
+2026-10-10 13:43:30,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:43:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:43:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:44:00,Pond Level (mm),50,MI,2188
+2026-10-10 13:44:00,Current Output (kW),33,MI,149
+2026-10-10 13:44:00,Station Setpoint (kW),60,MI,170
+2026-10-10 13:44:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:44:00,WL Integral,345,MI,170
+2026-10-10 13:44:00,WL proportional,342,MI,0
+2026-10-10 13:44:00,WL PID Out,350,MI,170
+2026-10-10 13:44:00,Intake Batt (Volts x10),49,MI,256
+2026-10-10 13:44:00,Intake Differential Pressure (mm),304,MI,18
+2026-10-10 13:44:00,WL ROC (mm/hour),368,MI,-30
+2026-10-10 13:44:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:44:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:44:30,Pond Level (mm),50,MI,2189
+2026-10-10 13:44:30,Current Output (kW),33,MI,164
+2026-10-10 13:44:30,Station Setpoint (kW),60,MI,175
+2026-10-10 13:44:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:44:30,WL Integral,345,MI,170
+2026-10-10 13:44:30,WL proportional,342,MI,5
+2026-10-10 13:44:30,WL PID Out,350,MI,175
+2026-10-10 13:44:30,Intake Batt (Volts x10),49,MI,256
+2026-10-10 13:44:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:44:30,WL ROC (mm/hour),368,MI,-30
+2026-10-10 13:44:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:44:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:45:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:45:00,Current Output (kW),33,MI,171
+2026-10-10 13:45:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:45:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:45:00,WL Integral,345,MI,170
+2026-10-10 13:45:00,WL proportional,342,MI,5
+2026-10-10 13:45:00,WL PID Out,350,MI,175
+2026-10-10 13:45:00,Intake Batt (Volts x10),49,MI,256
+2026-10-10 13:45:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:45:00,WL ROC (mm/hour),368,MI,-30
+2026-10-10 13:45:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:45:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:45:30,Pond Level (mm),50,MI,2189
+2026-10-10 13:45:30,Current Output (kW),33,MI,157
+2026-10-10 13:45:30,Station Setpoint (kW),60,MI,175
+2026-10-10 13:45:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:45:30,WL Integral,345,MI,170
+2026-10-10 13:45:30,WL proportional,342,MI,5
+2026-10-10 13:45:30,WL PID Out,350,MI,175
+2026-10-10 13:45:30,Intake Batt (Volts x10),49,MI,256
+2026-10-10 13:45:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:45:30,WL ROC (mm/hour),368,MI,-30
+2026-10-10 13:45:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:45:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:46:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:46:00,Current Output (kW),33,MI,157
+2026-10-10 13:46:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:46:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:46:00,WL Integral,345,MI,170
+2026-10-10 13:46:00,WL proportional,342,MI,5
+2026-10-10 13:46:00,WL PID Out,350,MI,175
+2026-10-10 13:46:00,Intake Batt (Volts x10),49,MI,256
+2026-10-10 13:46:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:46:00,WL ROC (mm/hour),368,MI,-30
+2026-10-10 13:46:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:46:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:46:30,Pond Level (mm),50,MI,2189
+2026-10-10 13:46:30,Current Output (kW),33,MI,165
+2026-10-10 13:46:30,Station Setpoint (kW),60,MI,175
+2026-10-10 13:46:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:46:30,WL Integral,345,MI,170
+2026-10-10 13:46:30,WL proportional,342,MI,5
+2026-10-10 13:46:30,WL PID Out,350,MI,175
+2026-10-10 13:46:30,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:46:30,Intake Differential Pressure (mm),304,MI,18
+2026-10-10 13:46:30,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:46:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:46:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:47:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:47:00,Current Output (kW),33,MI,166
+2026-10-10 13:47:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:47:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:47:00,WL Integral,345,MI,170
+2026-10-10 13:47:00,WL proportional,342,MI,5
+2026-10-10 13:47:00,WL PID Out,350,MI,175
+2026-10-10 13:47:00,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:47:00,Intake Differential Pressure (mm),304,MI,18
+2026-10-10 13:47:00,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:47:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:47:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:47:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:47:30,Current Output (kW),33,MI,167
+2026-10-10 13:47:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:47:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:47:30,WL Integral,345,MI,170
+2026-10-10 13:47:30,WL proportional,342,MI,0
+2026-10-10 13:47:30,WL PID Out,350,MI,170
+2026-10-10 13:47:30,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:47:30,Intake Differential Pressure (mm),304,MI,18
+2026-10-10 13:47:30,WL ROC (mm/hour),368,MI,30
+2026-10-10 13:47:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:47:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:48:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:48:00,Current Output (kW),33,MI,163
+2026-10-10 13:48:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:48:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:48:00,WL Integral,345,MI,170
+2026-10-10 13:48:00,WL proportional,342,MI,5
+2026-10-10 13:48:00,WL PID Out,350,MI,175
+2026-10-10 13:48:00,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:48:00,Intake Differential Pressure (mm),304,MI,18
+2026-10-10 13:48:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:48:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:48:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:48:30,Pond Level (mm),50,MI,2189
+2026-10-10 13:48:30,Current Output (kW),33,MI,172
+2026-10-10 13:48:30,Station Setpoint (kW),60,MI,175
+2026-10-10 13:48:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:48:30,WL Integral,345,MI,170
+2026-10-10 13:48:30,WL proportional,342,MI,5
+2026-10-10 13:48:30,WL PID Out,350,MI,175
+2026-10-10 13:48:30,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:48:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:48:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:48:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:48:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:49:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:49:00,Current Output (kW),33,MI,157
+2026-10-10 13:49:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:49:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:49:00,WL Integral,345,MI,170
+2026-10-10 13:49:00,WL proportional,342,MI,5
+2026-10-10 13:49:00,WL PID Out,350,MI,175
+2026-10-10 13:49:00,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:49:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:49:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:49:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:49:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:49:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:49:30,Current Output (kW),33,MI,165
+2026-10-10 13:49:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:49:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:49:30,WL Integral,345,MI,170
+2026-10-10 13:49:30,WL proportional,342,MI,0
+2026-10-10 13:49:30,WL PID Out,350,MI,170
+2026-10-10 13:49:30,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:49:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:49:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:49:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:49:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:50:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:50:00,Current Output (kW),33,MI,176
+2026-10-10 13:50:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:50:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:50:00,WL Integral,345,MI,170
+2026-10-10 13:50:00,WL proportional,342,MI,5
+2026-10-10 13:50:00,WL PID Out,350,MI,175
+2026-10-10 13:50:00,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:50:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:50:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:50:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:50:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:50:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:50:30,Current Output (kW),33,MI,163
+2026-10-10 13:50:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:50:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:50:30,WL Integral,345,MI,170
+2026-10-10 13:50:30,WL proportional,342,MI,0
+2026-10-10 13:50:30,WL PID Out,350,MI,170
+2026-10-10 13:50:30,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:50:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:50:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:50:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:50:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:51:00,Pond Level (mm),50,MI,2188
+2026-10-10 13:51:00,Current Output (kW),33,MI,164
+2026-10-10 13:51:00,Station Setpoint (kW),60,MI,170
+2026-10-10 13:51:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:51:00,WL Integral,345,MI,170
+2026-10-10 13:51:00,WL proportional,342,MI,0
+2026-10-10 13:51:00,WL PID Out,350,MI,170
+2026-10-10 13:51:00,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:51:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:51:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:51:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:51:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:51:30,Pond Level (mm),50,MI,2188
+2026-10-10 13:51:30,Current Output (kW),33,MI,159
+2026-10-10 13:51:30,Station Setpoint (kW),60,MI,170
+2026-10-10 13:51:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:51:30,WL Integral,345,MI,170
+2026-10-10 13:51:30,WL proportional,342,MI,0
+2026-10-10 13:51:30,WL PID Out,350,MI,170
+2026-10-10 13:51:30,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:51:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:51:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:51:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:51:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:52:00,Pond Level (mm),50,MI,2189
+2026-10-10 13:52:00,Current Output (kW),33,MI,168
+2026-10-10 13:52:00,Station Setpoint (kW),60,MI,175
+2026-10-10 13:52:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:52:00,WL Integral,345,MI,170
+2026-10-10 13:52:00,WL proportional,342,MI,5
+2026-10-10 13:52:00,WL PID Out,350,MI,175
+2026-10-10 13:52:00,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:52:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:52:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:52:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:52:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:52:30,Pond Level (mm),50,MI,
+2026-10-10 13:52:30,Current Output (kW),33,MI,
+2026-10-10 13:52:30,Station Setpoint (kW),60,MI,
+2026-10-10 13:52:30,Water Level Setpoint (mm),340,MI,
+2026-10-10 13:52:30,WL Integral,345,MI,
+2026-10-10 13:52:30,WL proportional,342,MI,
+2026-10-10 13:52:30,WL PID Out,350,MI,
+2026-10-10 13:52:30,Intake Batt (Volts x10),49,MI,
+2026-10-10 13:52:30,Intake Differential Pressure (mm),304,MI,
+2026-10-10 13:52:30,WL ROC (mm/hour),368,MI,
+2026-10-10 13:52:30,Screen Cleaner Running,31,MB,
+2026-10-10 13:52:30,Est Bypass Flow (l/s),15,MF,
+2026-10-10 13:53:00,Pond Level (mm),50,MI,2188
+2026-10-10 13:53:00,Current Output (kW),33,MI,163
+2026-10-10 13:53:00,Station Setpoint (kW),60,MI,170
+2026-10-10 13:53:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:53:00,WL Integral,345,MI,170
+2026-10-10 13:53:00,WL proportional,342,MI,0
+2026-10-10 13:53:00,WL PID Out,350,MI,170
+2026-10-10 13:53:00,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:53:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:53:00,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:53:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:53:00,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:53:30,Pond Level (mm),50,MI,2189
+2026-10-10 13:53:30,Current Output (kW),33,MI,173
+2026-10-10 13:53:30,Station Setpoint (kW),60,MI,175
+2026-10-10 13:53:30,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:53:30,WL Integral,345,MI,170
+2026-10-10 13:53:30,WL proportional,342,MI,5
+2026-10-10 13:53:30,WL PID Out,350,MI,175
+2026-10-10 13:53:30,Intake Batt (Volts x10),49,MI,257
+2026-10-10 13:53:30,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:53:30,WL ROC (mm/hour),368,MI,0
+2026-10-10 13:53:30,Screen Cleaner Running,31,MB,0
+2026-10-10 13:53:30,Est Bypass Flow (l/s),15,MF,7.2678
+2026-10-10 13:54:00,Pond Level (mm),50,MI,2188
+2026-10-10 13:54:00,Current Output (kW),33,MI,157
+2026-10-10 13:54:00,Station Setpoint (kW),60,MI,170
+2026-10-10 13:54:00,Water Level Setpoint (mm),340,MI,2188
+2026-10-10 13:54:00,WL Integral,345,MI,170
+2026-10-10 13:54:00,WL proportional,342,MI,0
+2026-10-10 13:54:00,WL PID Out,350,MI,170
+2026-10-10 13:54:00,Intake Batt (Volts x10),49,MI,256
+2026-10-10 13:54:00,Intake Differential Pressure (mm),304,MI,21
+2026-10-10 13:54:00,WL ROC (mm/hour),368,MI,-30
+2026-10-10 13:54:00,Screen Cleaner Running,31,MB,0
+2026-10-10 13:54:00,Est Bypass Flow (l/s),15,MF,7.2678

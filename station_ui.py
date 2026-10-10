@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import math
 import time
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime, timedelta
-from data_logging import DEFAULT_REGISTER_TYPE, REGISTER_TYPES
+from data_logging import DEFAULT_REGISTER_TYPE, LOG_INTERVAL_SECONDS, REGISTER_TYPES
 import matplotlib.dates as mdates
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -663,14 +664,27 @@ class StationMonitor(tk.Tk):
             ax.clear()
             vx = []
             vy = []
+            last_ts = None
 
             values = series_by_name.get(name, [])
             if timestamps and first_idx < len(timestamps):
                 for idx in range(first_idx, len(timestamps)):
                     if idx >= len(values):
                         continue
-                    vx.append(mdates.date2num(timestamps[idx]))
-                    vy.append(float(values[idx]))
+
+                    ts = timestamps[idx]
+                    if (
+                        last_ts is not None
+                        and (ts - last_ts).total_seconds() > (LOG_INTERVAL_SECONDS * 1.5)
+                    ):
+                        vx.append(mdates.date2num(ts))
+                        vy.append(float("nan"))
+
+                    value = values[idx]
+                    y = float(value) if isinstance(value, (int, float)) else float("nan")
+                    vx.append(mdates.date2num(ts))
+                    vy.append(y)
+                    last_ts = ts
 
                 if vx and timestamps[first_idx] > cutoff:
                     vx.insert(0, mdates.date2num(cutoff))
@@ -696,10 +710,20 @@ class StationMonitor(tk.Tk):
 
             ax.set_xlim(mdates.date2num(cutoff), mdates.date2num(latest_log_dt))
 
-            self._series_cache[ax] = {"name": name, "xs": vx, "ys": vy}
+            finite_points = [
+                (x, y)
+                for x, y in zip(vx, vy)
+                if math.isfinite(y)
+            ]
+            self._series_cache[ax] = {
+                "name": name,
+                "xs": [x for x, _ in finite_points],
+                "ys": [y for _, y in finite_points],
+            }
 
-            if vy:
-                lo, hi = min(vy), max(vy)
+            finite_y = [y for y in vy if math.isfinite(y)]
+            if finite_y:
+                lo, hi = min(finite_y), max(finite_y)
                 pad = (hi - lo) * 0.05 or max(abs(hi) * 0.05, 1.0)
                 ax.set_ylim(lo - pad, hi + pad)
 

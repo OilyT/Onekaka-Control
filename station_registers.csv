@@ -9,6 +9,5 @@ WL PID Out,350,MI
 Intake Batt (Volts x10),49,MI
 Intake Differential Pressure (mm),304,MI
 WL ROC (mm/hour),368,MI
-Penstock Pressure (cm),31,MI
+Screen Cleaner Running,31,MB
 Est Bypass Flow (l/s),15,MF
-uptime (s),0,ML

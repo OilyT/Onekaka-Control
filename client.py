@@ -76,7 +76,7 @@ def _sleep_unless_offline(seconds: float):
 def _ensure_plot_field(name: str):
     series = plot_buffers.get(name)
     if series is None:
-        series = deque([0.0] * len(plot_timestamps), maxlen=HISTORY_LENGTH)
+        series = deque([float("nan")] * len(plot_timestamps), maxlen=HISTORY_LENGTH)
         plot_buffers[name] = series
     return series
 
@@ -126,7 +126,9 @@ def initialize_plot_buffers(snapshots: list[dict], registers: dict):
             plot_timestamps.append(ts_dt)
             for name in list(plot_buffers.keys()):
                 value = snapshot.get(name)
-                plot_buffers[name].append(float(value) if isinstance(value, (int, float)) else 0.0)
+                plot_buffers[name].append(
+                    float(value) if isinstance(value, (int, float)) else float("nan")
+                )
 
 
 def initialize_log_state(registers: dict, now: datetime | None = None):
@@ -153,6 +155,8 @@ def append_plot_buffers(slot_ts: str, register_names: list[str], current_values:
                 value = current_values.get(name)
                 if isinstance(value, (int, float)):
                     series[-1] = float(value)
+                else:
+                    series[-1] = float("nan")
         else:
             plot_timestamps.append(ts_dt)
             for name in register_names:
@@ -162,10 +166,8 @@ def append_plot_buffers(slot_ts: str, register_names: list[str], current_values:
                 value = current_values.get(name)
                 if isinstance(value, (int, float)):
                     series.append(float(value))
-                elif series:
-                    series.append(series[-1])
                 else:
-                    series.append(0.0)
+                    series.append(float("nan"))
 
 
 # ---------------------------------------------------------------------------
