@@ -26,6 +26,8 @@ POLL_INTERVAL = 5        # seconds between Modbus polls
 RECONNECT_INTERVAL = 30  # seconds between reconnect attempts
 MODBUS_TIMEOUT_SECONDS = 15
 MODBUS_RETRIES = 0
+MAX_HOLDING_REGISTERS_PER_READ = 125
+MAX_COILS_PER_READ = 2000
 HISTORY_LENGTH = LOG_TOTAL_SLOTS
 WIDE_TYPES = ("ML", "MF")  # types stored as two consecutive 16-bit registers
 
@@ -55,6 +57,71 @@ def _decode_register_value(reg_type: str, registers: list[int]):
 
     value = registers[0]
     return value - 0x10000 if value >= 0x8000 else value
+
+
+def _build_type_batches(register_items: list[tuple[str, dict]]) -> dict[str, dict]:
+    """Build one contiguous read range per register type."""
+    batches: dict[str, dict] = {}
+
+    for name, info in register_items:
+        reg_type = info.get("type")
+        offset = REGISTER_TYPE_OFFSETS.get(reg_type)
+        if offset is None:
+            continue
+
+        base_address = info["address"] + offset
+        width = 2 if reg_type in WIDE_TYPES else 1
+
+        batch = batches.get(reg_type)
+        if batch is None:
+            batches[reg_type] = {
+                "start": base_address,
+                "end": base_address + width - 1,
+                "items": [(name, base_address, width)],
+            }
+            continue
+
+        batch["start"] = min(batch["start"], base_address)
+        batch["end"] = max(batch["end"], base_address + width - 1)
+        batch["items"].append((name, base_address, width))
+
+    return batches
+
+
+def _read_holding_register_range(client, start: int, count: int, device_id: int = 1):
+    """Read a holding-register range in chunks and return a contiguous buffer."""
+    values: list[int] = []
+    remaining = count
+    address = start
+
+    while remaining > 0:
+        chunk_size = min(remaining, MAX_HOLDING_REGISTERS_PER_READ)
+        rr = client.read_holding_registers(address, count=chunk_size, device_id=device_id)
+        if rr.isError() or len(rr.registers) < chunk_size:
+            return None
+        values.extend(rr.registers[:chunk_size])
+        address += chunk_size
+        remaining -= chunk_size
+
+    return values
+
+
+def _read_coils_range(client, start: int, count: int, device_id: int = 1):
+    """Read a coil range in chunks and return a contiguous buffer."""
+    values: list[bool] = []
+    remaining = count
+    address = start
+
+    while remaining > 0:
+        chunk_size = min(remaining, MAX_COILS_PER_READ)
+        rr = client.read_coils(address, count=chunk_size, device_id=device_id)
+        if rr.isError() or len(rr.bits) < chunk_size:
+            return None
+        values.extend(rr.bits[:chunk_size])
+        address += chunk_size
+        remaining -= chunk_size
+
+    return values
 
 
 def set_offline_mode(enabled: bool):
@@ -204,32 +271,56 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                         register_items = list(monitored_registers.items())
 
                     for name, info in register_items:
+                        reg_type = info.get("type")
+                        if REGISTER_TYPE_OFFSETS.get(reg_type) is None:
+                            station_info_data[name] = "Unsupported type"
+
+                    type_batches = _build_type_batches(register_items)
+
+                    for reg_type, batch in type_batches.items():
                         if offline_event.is_set():
                             break
-                        address = info["address"]
-                        reg_type = info["type"]
+
+                        start = batch["start"]
+                        count = batch["end"] - batch["start"] + 1
+                        items = batch["items"]
+
                         try:
-                            offset = REGISTER_TYPE_OFFSETS.get(reg_type)
-                            if offset is None:
-                                station_info_data[name] = "Unsupported type"
-                            elif reg_type == COIL_TYPE:
-                                rr = client.read_coils(address + offset, count=1, device_id=1)
-                                if rr.isError():
-                                    station_info_data[name] = "Modbus Error"
-                                else:
-                                    station_info_data[name] = int(bool(rr.bits[0]))
+                            if reg_type == COIL_TYPE:
+                                coil_values = _read_coils_range(client, start, count, device_id=1)
+                                if coil_values is None:
+                                    for name, _base_address, _width in items:
+                                        station_info_data[name] = "Modbus Error"
+                                    continue
+
+                                for name, base_address, _width in items:
+                                    idx = base_address - start
+                                    station_info_data[name] = int(bool(coil_values[idx]))
                             else:
-                                count = 2 if reg_type in WIDE_TYPES else 1
-                                rr = client.read_holding_registers(address + offset, count=count, device_id=1)
-                                if rr.isError() or len(rr.registers) < count:
-                                    station_info_data[name] = "Modbus Error"
-                                else:
+                                register_values = _read_holding_register_range(
+                                    client,
+                                    start,
+                                    count,
+                                    device_id=1,
+                                )
+                                if register_values is None:
+                                    for name, _base_address, _width in items:
+                                        station_info_data[name] = "Modbus Error"
+                                    continue
+
+                                for name, base_address, width in items:
+                                    idx = base_address - start
+                                    raw_values = register_values[idx: idx + width]
+                                    if len(raw_values) < width:
+                                        station_info_data[name] = "Modbus Error"
+                                        continue
                                     station_info_data[name] = _decode_register_value(
                                         reg_type,
-                                        rr.registers,
+                                        raw_values,
                                     )
                         except ModbusException as exc:
-                            station_info_data[name] = f"Exception: {exc}"
+                            for name, _base_address, _width in items:
+                                station_info_data[name] = f"Exception: {exc}"
 
                     _sleep_unless_offline(POLL_INTERVAL)
         except Exception as e:
