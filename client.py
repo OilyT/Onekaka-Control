@@ -40,7 +40,10 @@ plotted_fields: set[str] = set()
 monitored_registers: dict = {}
 register_lock = Lock()
 plot_buffer_lock = Lock()
+read_state_lock = Lock()
 offline_event = Event()
+last_successful_values: dict[str, float | int] = {}
+successful_since_last_log: set[str] = set()
 
 
 def _decode_register_value(reg_type: str, registers: list[int]):
@@ -295,7 +298,11 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
 
                                 for name, base_address, _width in items:
                                     idx = base_address - start
-                                    station_info_data[name] = int(bool(coil_values[idx]))
+                                    value = int(bool(coil_values[idx]))
+                                    station_info_data[name] = value
+                                    with read_state_lock:
+                                        last_successful_values[name] = value
+                                        successful_since_last_log.add(name)
                             else:
                                 register_values = _read_holding_register_range(
                                     client,
@@ -314,10 +321,14 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                                     if len(raw_values) < width:
                                         station_info_data[name] = "Modbus Error"
                                         continue
-                                    station_info_data[name] = _decode_register_value(
+                                    value = _decode_register_value(
                                         reg_type,
                                         raw_values,
                                     )
+                                    station_info_data[name] = value
+                                    with read_state_lock:
+                                        last_successful_values[name] = value
+                                        successful_since_last_log.add(name)
                         except ModbusException as exc:
                             for name, _base_address, _width in items:
                                 station_info_data[name] = f"Exception: {exc}"
@@ -354,10 +365,14 @@ def data_logger_worker():
         with register_lock:
             register_copy = {name: dict(info) for name, info in monitored_registers.items()}
 
-        current_values = {
-            name: station_info_data.get(name)
-            for name in register_copy
-        }
+        current_values: dict[str, float | int | None] = {}
+        with read_state_lock:
+            for name in register_copy:
+                if name in successful_since_last_log:
+                    current_values[name] = last_successful_values.get(name)
+                else:
+                    current_values[name] = None
+            successful_since_last_log.clear()
 
         update_time_series_log(
             register_copy,
@@ -369,7 +384,7 @@ def data_logger_worker():
         snapshot = {"timestamp": slot_ts}
         for name in register_copy:
             value = current_values.get(name)
-            snapshot[name] = value if isinstance(value, (int, float)) else 0
+            snapshot[name] = value if isinstance(value, (int, float)) else None
         history.append(snapshot)
         append_plot_buffers(slot_ts, list(register_copy.keys()), current_values)
 
