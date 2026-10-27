@@ -22,12 +22,13 @@ from data_logging import (
     update_time_series_log,
 )
 
-POLL_INTERVAL = 5        # seconds between Modbus polls
+POLL_INTERVAL = 10        # seconds between Modbus polls
 RECONNECT_INTERVAL = 30  # seconds between reconnect attempts
-MODBUS_TIMEOUT_SECONDS = 15
-MODBUS_RETRIES = 0
+MODBUS_TIMEOUT_SECONDS = 5
+MODBUS_RETRIES = 2
 MAX_HOLDING_REGISTERS_PER_READ = 125
 MAX_COILS_PER_READ = 2000
+POLL_QUALITY_WINDOW = 128
 HISTORY_LENGTH = LOG_TOTAL_SLOTS
 WIDE_TYPES = ("ML", "MF")  # types stored as two consecutive 16-bit registers
 
@@ -40,10 +41,12 @@ plotted_fields: set[str] = set()
 monitored_registers: dict = {}
 register_lock = Lock()
 plot_buffer_lock = Lock()
+poll_quality_lock = Lock()
 read_state_lock = Lock()
 offline_event = Event()
 last_successful_values: dict[str, float | int] = {}
 successful_since_last_log: set[str] = set()
+poll_quality_history: deque[bool] = deque(maxlen=POLL_QUALITY_WINDOW)
 
 
 def _decode_register_value(reg_type: str, registers: list[int]):
@@ -89,6 +92,19 @@ def _build_type_batches(register_items: list[tuple[str, dict]]) -> dict[str, dic
         batch["items"].append((name, base_address, width))
 
     return batches
+
+
+def _record_poll_result(success: bool):
+    with poll_quality_lock:
+        poll_quality_history.append(bool(success))
+
+
+def get_connection_quality_percent() -> float | None:
+    with poll_quality_lock:
+        if not poll_quality_history:
+            return None
+        successful = sum(1 for ok in poll_quality_history if ok)
+        return (successful / len(poll_quality_history)) * 100.0
 
 
 def _read_holding_register_range(client, start: int, count: int, device_id: int = 1):
@@ -273,10 +289,13 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                     with register_lock:
                         register_items = list(monitored_registers.items())
 
+                    poll_success = True
+
                     for name, info in register_items:
                         reg_type = info.get("type")
                         if REGISTER_TYPE_OFFSETS.get(reg_type) is None:
                             station_info_data[name] = "Unsupported type"
+                            poll_success = False
 
                     type_batches = _build_type_batches(register_items)
 
@@ -292,6 +311,7 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                             if reg_type == COIL_TYPE:
                                 coil_values = _read_coils_range(client, start, count, device_id=1)
                                 if coil_values is None:
+                                    poll_success = False
                                     for name, _base_address, _width in items:
                                         station_info_data[name] = "Modbus Error"
                                     continue
@@ -311,6 +331,7 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                                     device_id=1,
                                 )
                                 if register_values is None:
+                                    poll_success = False
                                     for name, _base_address, _width in items:
                                         station_info_data[name] = "Modbus Error"
                                     continue
@@ -319,6 +340,7 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                                     idx = base_address - start
                                     raw_values = register_values[idx: idx + width]
                                     if len(raw_values) < width:
+                                        poll_success = False
                                         station_info_data[name] = "Modbus Error"
                                         continue
                                     value = _decode_register_value(
@@ -330,8 +352,11 @@ def modbus_station_poller(host="192.168.0.10", port=20263, framer=FramerType.SOC
                                         last_successful_values[name] = value
                                         successful_since_last_log.add(name)
                         except ModbusException as exc:
+                            poll_success = False
                             for name, _base_address, _width in items:
                                 station_info_data[name] = f"Exception: {exc}"
+
+                    _record_poll_result(poll_success)
 
                     _sleep_unless_offline(POLL_INTERVAL)
         except Exception as e:

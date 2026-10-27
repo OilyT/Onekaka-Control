@@ -47,6 +47,7 @@ class StationMonitor(tk.Tk):
         poll_interval,
         csv_file,
         get_connection_status,
+        get_connection_quality_percent=None,
         is_plot_enabled=None,
         set_plot_enabled=None,
         persist_register=None,
@@ -64,6 +65,7 @@ class StationMonitor(tk.Tk):
         self._poll_interval = poll_interval
         self._csv_file = csv_file
         self._get_connection_status = get_connection_status
+        self._get_connection_quality_percent = get_connection_quality_percent
         self._is_plot_enabled = is_plot_enabled
         self._set_plot_enabled = set_plot_enabled
         self._persist_register = persist_register
@@ -79,20 +81,36 @@ class StationMonitor(tk.Tk):
 
         tk.Label(
             left,
-            text="Onekaka Hydro Station",
+            text="Onekaka Station Monitor V1.0",
             font=("Helvetica", 15, "bold"),
             bg=self._BG,
             fg=self._FG,
         ).grid(row=0, column=0, columnspan=2, pady=(0, 8))
 
+        status_frame = tk.Frame(left, bg=self._BG)
+        status_frame.grid(row=1, column=0, columnspan=2, sticky="w", pady=(0, 4))
+
         self.status_var = tk.StringVar(value="Connecting...")
         tk.Label(
-            left,
+            status_frame,
             textvariable=self.status_var,
             font=("Helvetica", 9, "italic"),
             bg=self._BG,
             fg=COLOUR_STATUS_GREEN,
-        ).grid(row=1, column=0, columnspan=2, pady=(0, 4))
+            anchor="w",
+            justify="left",
+        ).grid(row=0, column=0, sticky="w")
+
+        self.connection_quality_var = tk.StringVar(value="Connection quality: --%")
+        tk.Label(
+            status_frame,
+            textvariable=self.connection_quality_var,
+            font=("Helvetica", 8),
+            bg=self._BG,
+            fg=self._DIM,
+            anchor="w",
+            justify="left",
+        ).grid(row=1, column=0, sticky="w")
 
         self.offline_var = tk.BooleanVar(
             value=bool(is_offline_mode()) if is_offline_mode is not None else False
@@ -616,6 +634,12 @@ class StationMonitor(tk.Tk):
     def _refresh(self):
         # Update live value labels
         self.status_var.set(self._get_connection_status())
+        if self._get_connection_quality_percent is not None:
+            quality = self._get_connection_quality_percent()
+            if quality is None:
+                self.connection_quality_var.set("Connection quality: --%")
+            else:
+                self.connection_quality_var.set(f"Connection quality: {quality:.1f}%")
         if self.use_now_var.get():
             self.end_time_var.set(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         for name, var in self.value_vars.items():
