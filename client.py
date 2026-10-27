@@ -24,7 +24,7 @@ from data_logging import (
 
 POLL_INTERVAL = 5        # seconds between Modbus polls
 RECONNECT_INTERVAL = 30  # seconds between reconnect attempts
-MODBUS_TIMEOUT_SECONDS = 10
+MODBUS_TIMEOUT_SECONDS = 15
 MODBUS_RETRIES = 0
 HISTORY_LENGTH = LOG_TOTAL_SLOTS
 WIDE_TYPES = ("ML", "MF")  # types stored as two consecutive 16-bit registers
