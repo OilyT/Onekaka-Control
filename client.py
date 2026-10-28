@@ -22,13 +22,13 @@ from data_logging import (
     update_time_series_log,
 )
 
-POLL_INTERVAL = 10        # seconds between Modbus polls
+POLL_INTERVAL = 5        # seconds between Modbus polls
 RECONNECT_INTERVAL = 30  # seconds between reconnect attempts
-MODBUS_TIMEOUT_SECONDS = 5
+MODBUS_TIMEOUT_SECONDS = 10
 MODBUS_RETRIES = 2
 MAX_HOLDING_REGISTERS_PER_READ = 125
 MAX_COILS_PER_READ = 2000
-POLL_QUALITY_WINDOW = 128
+POLL_QUALITY_WINDOW = 256
 HISTORY_LENGTH = LOG_TOTAL_SLOTS
 WIDE_TYPES = ("ML", "MF")  # types stored as two consecutive 16-bit registers
 
