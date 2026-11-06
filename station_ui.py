@@ -78,6 +78,7 @@ class StationMonitor(tk.Tk):
         # ---- Left panel: live values ----------------------------------------
         left = tk.Frame(self, bg=self._BG, padx=20, pady=20)
         left.grid(row=0, column=0, sticky="ns")
+        left.rowconfigure(19, weight=1)
 
         tk.Label(
             left,
@@ -249,8 +250,28 @@ class StationMonitor(tk.Tk):
             fg=self._FG,
         ).grid(row=18, column=0, columnspan=2, sticky="w", pady=(0, 6))
 
-        self.values_frame = tk.Frame(left, bg=self._BG)
-        self.values_frame.grid(row=19, column=0, columnspan=2, sticky="ew")
+        values_container = tk.Frame(left, bg=self._BG)
+        values_container.grid(row=19, column=0, columnspan=2, sticky="nsew")
+        values_container.rowconfigure(0, weight=1)
+        values_container.columnconfigure(0, weight=1)
+
+        self._values_canvas = tk.Canvas(
+            values_container, bg=self._BG, highlightthickness=0, width=550, height=160
+        )
+        self._values_canvas.grid(row=0, column=0, sticky="nsew")
+        values_scrollbar = tk.Scrollbar(
+            values_container, orient="vertical", command=self._values_canvas.yview
+        )
+        values_scrollbar.grid(row=0, column=1, sticky="ns")
+        self._values_canvas.configure(yscrollcommand=values_scrollbar.set)
+        self.values_frame = tk.Frame(self._values_canvas, bg=self._BG)
+        self._values_window = self._values_canvas.create_window(
+            (0, 0), window=self.values_frame, anchor="nw"
+        )
+        self.values_frame.bind("<Configure>", self._on_values_frame_configure)
+        self._values_canvas.bind("<Configure>", self._on_values_canvas_configure)
+        self._bind_values_scroll(self._values_canvas)
+        self._bind_values_scroll(self.values_frame)
         self.value_vars = {}
         self.plot_vars = {}
 
@@ -346,6 +367,27 @@ class StationMonitor(tk.Tk):
             return
         self._resize_plot_canvas(width_px=event.width)
 
+    def _on_values_frame_configure(self, _event):
+        self._values_canvas.configure(scrollregion=self._values_canvas.bbox("all"))
+
+    def _on_values_canvas_configure(self, event):
+        self._values_canvas.itemconfigure(self._values_window, width=event.width)
+
+    def _bind_values_scroll(self, widget):
+        widget.bind("<MouseWheel>", self._on_values_mousewheel)
+        widget.bind("<Button-4>", self._on_values_mousewheel)
+        widget.bind("<Button-5>", self._on_values_mousewheel)
+
+    def _on_values_mousewheel(self, event):
+        if event.num == 4:
+            steps = -1
+        elif event.num == 5:
+            steps = 1
+        else:
+            steps = -int(event.delta / 120)
+        self._values_canvas.yview_scroll(steps, "units")
+        return "break"
+
     def _resize_plot_canvas(self, width_px: int | None = None):
         n = max(len(self._numeric_fields), 1)
         dpi = self._fig.get_dpi()
@@ -369,52 +411,88 @@ class StationMonitor(tk.Tk):
             widget.destroy()
 
         with self._register_lock:
-            names = list(self._monitored_registers.keys())
+            registers = [(name, dict(info)) for name, info in self._monitored_registers.items()]
 
         self.value_vars = {}
         self.plot_vars = {}
-        if not names:
-            tk.Label(
+        for column, heading in enumerate(("Register Name", "Type", "Address", "Value", "Plot")):
+            header = tk.Label(
+                self.values_frame,
+                text=heading,
+                font=("Helvetica", 9, "bold"),
+                bg=self._BG,
+                fg=self._DIM,
+                anchor="w",
+            )
+            header.grid(row=0, column=column, sticky="ew", padx=(0, 8), pady=(0, 4))
+            self._bind_values_scroll(header)
+
+        if not registers:
+            empty_label = tk.Label(
                 self.values_frame,
                 text="No registers configured",
                 font=("Helvetica", 9, "italic"),
                 bg=self._BG,
                 fg=self._DIM,
                 anchor="w",
-            ).grid(row=0, column=0, columnspan=2, sticky="w")
+            )
+            empty_label.grid(row=1, column=0, columnspan=5, sticky="w")
+            self._bind_values_scroll(empty_label)
             return
 
-        for i, name in enumerate(names):
-            tk.Label(
+        for i, (name, info) in enumerate(registers, start=1):
+            name_label = tk.Label(
                 self.values_frame,
                 text=name,
                 font=("Helvetica", 11),
                 bg=self._BG,
                 fg=self._FG,
                 anchor="w",
-                width=22,
-            ).grid(row=i, column=0, sticky="w", pady=3)
+                justify="left",
+                wraplength=200,
+            )
+            name_label.grid(row=i, column=0, sticky="w", pady=3, padx=(0, 8))
+            self._bind_values_scroll(name_label)
 
-            var = tk.StringVar(value="---")
+            for column, text in (
+                (1, info.get("type", DEFAULT_REGISTER_TYPE)),
+                (2, info["address"]),
+            ):
+                label = tk.Label(
+                    self.values_frame,
+                    text=text,
+                    font=("Helvetica", 11),
+                    bg=self._BG,
+                    fg=self._FG,
+                    anchor="w",
+                    justify="left",
+                    wraplength=70,
+                )
+                label.grid(row=i, column=column, sticky="w", pady=3, padx=(0, 8))
+                self._bind_values_scroll(label)
+
+            var = tk.StringVar(value=str(self._station_info_data.get(name, "---")))
             self.value_vars[name] = var
-            tk.Label(
+            value_label = tk.Label(
                 self.values_frame,
                 textvariable=var,
                 font=("Helvetica", 11, "bold"),
                 bg=self._BG,
                 fg=self._ACCENT,
-                anchor="e",
-                width=10,
-            ).grid(row=i, column=1, sticky="e", pady=3, padx=(0, 6))
+                anchor="w",
+                justify="left",
+                wraplength=100,
+            )
+            value_label.grid(row=i, column=3, sticky="w", pady=3, padx=(0, 8))
+            self._bind_values_scroll(value_label)
 
             is_enabled = True
             if self._is_plot_enabled is not None:
                 is_enabled = self._is_plot_enabled(name)
             plot_var = tk.BooleanVar(value=is_enabled)
             self.plot_vars[name] = plot_var
-            tk.Checkbutton(
+            plot_button = tk.Checkbutton(
                 self.values_frame,
-                text="Plot",
                 variable=plot_var,
                 command=lambda field=name: self._toggle_plot_field(field),
                 bg=self._BG,
@@ -422,7 +500,9 @@ class StationMonitor(tk.Tk):
                 selectcolor=self._PLOT_BG,
                 activebackground=self._BG,
                 activeforeground=self._FG,
-            ).grid(row=i, column=2, sticky="e", pady=3)
+            )
+            plot_button.grid(row=i, column=4, sticky="w", pady=3)
+            self._bind_values_scroll(plot_button)
 
     def _toggle_plot_field(self, name: str):
         var = self.plot_vars.get(name)
