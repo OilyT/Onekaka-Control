@@ -11,6 +11,8 @@ Intake Differential Pressure (mm),304,MI
 WL ROC (mm/hour),368,MI
 Penstock Pressure (cm),31,MI
 Est Bypass Flow (l/s),15,MF
-U1 kW,136,MI
-U2 kW,236,MI
+U1 kVAr,136,MI
+U2 kVAr,236,MI
 Socket 3 connected,8173,MB
+U1 Needle Valve,149,MI
+U2 Needle Valve,249,MI
